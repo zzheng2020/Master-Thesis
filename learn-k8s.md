@@ -2,11 +2,11 @@
 
 * Big picture of K8s.
 
-<img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/big_pic_k8s.png" style="zoom:30%;" />
+<img src="pic4md/big_pic_k8s.png" style="zoom:30%;" />
 
 * Master node in K8s.
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/master_in_k8s.png" style="zoom:40%;" />
+  <img src="pic4md/master_in_k8s.png" style="zoom:40%;" />
 
   * etcd: distributed kv strorage, use Raft.
 
@@ -18,7 +18,7 @@
 
 * Worker in k8s.
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/worker_in_k8s.png" style="zoom:40%;" />
+  <img src="pic4md/worker_in_k8s.png" style="zoom:40%;" />
 
   * kubelet: resource controller of worker.
   * container runtime: controller of container.
@@ -26,11 +26,11 @@
 
 * Process of k8s.
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/process_k8s.png" style="zoom:40%;" />
+  <img src="pic4md/process_k8s.png" style="zoom:40%;" />
 
 * Framework of k8s.
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/framework_k8s.png" style="zoom:40%;" />
+  <img src="pic4md/framework_k8s.png" style="zoom:40%;" />
 
 * Pod: 
 
@@ -66,13 +66,13 @@
   
     For testing, we can use `$ kubectl port-forward ett 8080:9999` to forward the requests.
   
-    <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/port_forward.png" style="zoom:40%;" />
+    <img src="pic4md/port_forward.png" style="zoom:40%;" />
   
 * NodePort Service
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/nodeport_service.png" style="zoom:40%;" />
+  <img src="pic4md/nodeport_service.png" style="zoom:40%;" />
 
-  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/label_seleter.png" style="zoom:40%;" />
+  <img src="pic4md/label_seleter.png" style="zoom:40%;" />
 
   * `port:` exposes the Kubernetes service on the specified port within the cluster.
   * `targetPort:` app in container is running on this port.
