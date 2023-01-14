@@ -37,6 +37,7 @@
   * Example
 
     ```yaml
+    # ett-pod.yaml
     apiVersion: v1
     kind: Pod
     metadata:
@@ -46,7 +47,53 @@
       - name: ett
         image: zzheng2020/ett-web-framework
     ```
-
     
-
+  * Common-used commands to publish a pod
   
+    ```shell
+    # Get all nodes information
+    $ kubectl get all
+    
+    # Apply a configuration to an object by filename or stdin.
+    $ kubectl apply -f [ett.yaml]
+    
+    # Get a specific pod information
+    $ kubectl get pod [pot_name]
+    
+    # Get a detailed description
+    $ kubectl describe pod ett
+    ```
+  
+    For testing, we can use `$ kubectl port-forward ett 8080:9999` to forward the requests.
+  
+    <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/port_forward.png" style="zoom:40%;" />
+  
+* NodePort Service
+
+  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/nodeport_service.png" style="zoom:40%;" />
+
+  <img src="/Users/zihengzhang/Code/Master-Thesis/pic4md/label_seleter.png" style="zoom:40%;" />
+
+  * `port:` exposes the Kubernetes service on the specified port within the cluster.
+  * `targetPort:` app in container is running on this port.
+  * `nodePort:` we can externally access to the service.
+
+  ```yaml
+  # ett-service.yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: ett
+  spec:
+    ports:
+      - name: http
+        port: 8080
+        targetPort: 9999
+        nodePort: 31080
+    selector:
+      app: ett
+    type: NodePort
+  ```
+
+  * We can use `kubectl apply -f .` to publish all file under this file path.
+  * ==Note: use `minikube service ett` to access the app on Chrome.== [Minikube Doc - Accessing apps](https://minikube.sigs.k8s.io/docs/handbook/accessing/)
