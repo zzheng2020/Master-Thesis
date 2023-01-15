@@ -97,3 +97,48 @@
 
   * We can use `kubectl apply -f .` to publish all file under this file path.
   * ==Note: use `minikube service ett` to access the app on Chrome.== [Minikube Doc - Accessing apps](https://minikube.sigs.k8s.io/docs/handbook/accessing/)
+
+* Blue/Green Deployment
+
+  1. Create two/several versions of app, and push them to docker hub.
+
+  2. Specific the app’s version in the `.yaml` file.
+
+     ```yaml
+     # ett-pod-v1.0.1.yaml
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       name: ett-v1.0.1
+       labels:
+         app: ett
+         version: v1.0.1 # specific the app's version.
+     spec:
+       containers:
+         - name: ett
+           image: zzheng2020/ett-web-framework:v1.0.1
+     ```
+
+  3. Create an `.yaml` file, such as the following example.
+
+     ```yaml
+     # ett-service.yaml
+     apiVersion: v1
+     kind: Service
+     metadata:
+       name: ett
+     spec:
+       ports:
+         - name: http
+           port: 8080
+           targetPort: 9999
+           nodePort: 31080
+       selector:
+         app: ett
+         version: v1.0.1 # change version to achieve blue/green deployment.
+       type: NodePort
+     ```
+
+  4. Change the version in the `.yaml` to achieve blue/green deployment.
+
+* 
