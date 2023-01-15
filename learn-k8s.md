@@ -141,4 +141,31 @@
 
   4. Change the version in the `.yaml` to achieve blue/green deployment.
 
-* 
+* ReplicaSet
+
+  <img src="pic4md/replicaset.png" style="zoom:40%;" />
+
+  Use `ReplicaSet` to achieve High Availability.
+
+  An example is as follows.
+
+  ```yaml
+  # ett-replicaset.yaml
+  apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    name: ett
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: ett
+    template:
+      metadata:
+        labels:
+          app: ett
+      spec:
+        containers:
+          - name: ett
+            image: zzheng2020/ett-web-framework:latest
+  ```
