@@ -208,3 +208,53 @@ Use `kubectl rollout undo deployment/ett` to rollback to the previous version.
 
 Use `kubectl rollout status deployment/ett` to check the status of deployment. Rollback can specify the certain version by using flag `--to-revision=[certain_version_number]`
 
+## ClusterIP Service
+
+Communication between pods.
+
+<img src="pic4md/communication_between_pod.png" style="zoom:40%;" />
+
+```yaml
+# mysql-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+    - name: mysql
+      image: mysql:5.7
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: petclinic
+        - name: MYSQL_DATABASE
+          value: petclinic
+```
+
+```yaml
+# mysql-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: tcp
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
+```
+
+* `ClusterIP` 内部服务访问
+* `NodePort` 对外暴露服务
+* `LoadBalancer` 对外暴露服务（公有云）
+
+## Namespace and Kube-DNS
+
+<img src="pic4md/namespace.png" style="zoom:40%;" />
+
+K8s 中用 kube-dns 来解析服务名，实现 K8s 内部域名 到 ClusterID 转换的过程.
