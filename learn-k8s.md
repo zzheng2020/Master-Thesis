@@ -1,5 +1,9 @@
 # K8s
 
+==Important: 默认情况下，Pod 只能通过 Kubernetes 集群中的内部 IP 地址访问。 要使得 `hello-node` 容器可以从 Kubernetes 虚拟网络的外部访问，你必须将 Pod 暴露为 Kubernetes [**Service**](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/)。==
+
+`minikube service [service-name]`
+
 ## Big picture of K8s
 
 <img src="pic4md/big_pic_k8s.png" style="zoom:30%;" />
@@ -258,3 +262,7 @@ spec:
 <img src="pic4md/namespace.png" style="zoom:40%;" />
 
 K8s 中用 kube-dns 来解析服务名，实现 K8s 内部域名 到 ClusterID 转换的过程.
+
+## ConfigMap/Screte
+
+<img src="pic4md/ConfigMap.png" style="zoom:40%;" />
