@@ -18,7 +18,6 @@ package controller
 
 import (
 	"context"
-	"reflect"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -32,6 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 
@@ -65,7 +65,8 @@ type WebServerReconciler struct {
 func (r *WebServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	// TODO(user): your logic here
 
-	log := r.Log.WithValues("Webserver", req.NamespacedName)
+	// log := r.Log.WithValues("Webserver", req.NamespacedName)
+	log := log.FromContext(ctx)
 
 	// Instance
 
@@ -151,25 +152,6 @@ func (r *WebServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{RequeueAfter: time.Second * 5}, err
 	}
 
-	// Ensure the service state is the same as the spec
-
-	// {"ports":[{"protocol":"TCP","port":80,"targetPort":0,"nodePort":30010}],"selector":{"app":"webserver","webserver_cr":"webserver-sample"},"type":"NodePort"}
-	// {"ports":[{"protocol":"TCP","port":80,"targetPort":0,"nodePort":30010}],"selector":{"app":"webserver","webserver_cr":"webserver-sample"},"type":"NodePort"}
-	srv := r.serviceForWebserver(instance)
-
-	log.Info("srv.Spec")
-	log.Info("foundService.Spec")
-
-	if !reflect.DeepEqual(srv.Spec, foundService.Spec) {
-		foundService.Spec = srv.Spec
-		log.Info("Updating service spec", "from", foundService.Spec, "to", srv.Spec)
-		err = r.Update(ctx, foundService)
-		if err != nil {
-			log.Error(err, "Failed to update service spec", "foundService.Spec", foundService.Spec, "srv.Spec", srv.Spec)
-			return ctrl.Result{RequeueAfter: time.Second * 5}, err
-		}
-	}
-
 	// reconcile webserver operator in again 10 seconds
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
@@ -179,7 +161,7 @@ func (r *WebServerReconciler) serviceForWebserver(ws *mydomainv1.WebServer) *cor
 	srv := &corev1.Service{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Service",
-			APIVersion: "apps/v1",
+			APIVersion: "v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      ws.Name + "-service",
