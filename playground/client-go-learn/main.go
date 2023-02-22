@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// get the IP address of the postgres-1 Pod
-	podName := "postgres-1-7955cf94cd-ghpk5"
+	podName := "pgupgrade-sample-689bfd9c4-xwlqk"
 	namespace := "default"
 	pod, err := clientset.CoreV1().Pods(namespace).Get(context.Background(), podName, metav1.GetOptions{})
 	if err != nil {
@@ -45,7 +45,7 @@ func main() {
 	fmt.Println(podIP)
 
 	// connect to the PostgreSQL database
-	connectionString := fmt.Sprintf("host=%s port=54005 user=postgres password=mysecretpassword dbname=mydatabase sslmode=disable", "127.0.0.1")
+	connectionString := fmt.Sprintf("host=%s port=56001 user=postgres password=mysecretpassword dbname=mydatabase sslmode=disable", "127.0.0.1")
 	fmt.Println(connectionString)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
@@ -54,7 +54,7 @@ func main() {
 	defer db.Close()
 
 	// send a request to the table
-	insertStatement := "insert into table_1 values(999)"
+	insertStatement := "insert into table_1 values(1000000)"
 	// createPub := "create publication pub2 for all tables"
 	// deletePub := "delete from pg_catalog.pg_publication where pubname='pub2'"
 	_, err = db.Exec(insertStatement)
