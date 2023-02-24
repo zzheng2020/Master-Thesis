@@ -15,7 +15,7 @@ spec:
   dbname: mydatabase
   pubname: pub
   olddbhost: '10.244.0.76'
+  olddbport: '5432'
   pgdump: true
-  serviceport: '63516'
 status:
   upgrade: false

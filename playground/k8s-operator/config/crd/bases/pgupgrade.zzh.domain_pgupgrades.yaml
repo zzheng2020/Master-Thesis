@@ -44,20 +44,18 @@ spec:
               olddbhost:
                 description: The host of the primary database.
                 type: string
+              olddbport:
+                description: The port of the primary database.
+                type: string
               pgdump:
                 description: Whether pg_dump is used to dump the data.
                 type: boolean
               pubname:
                 description: The publication name in the tartget database.
                 type: string
-              serviceport:
-                description: The service port of the PostgreSQL
-                type: string
               subname:
                 description: The subscription name of the PostgreSQL
                 type: string
-            required:
-            - serviceport
             type: object
           status:
             description: PgUpgradeStatus defines the observed state of PgUpgrade

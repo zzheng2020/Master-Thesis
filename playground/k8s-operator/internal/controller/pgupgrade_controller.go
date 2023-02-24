@@ -17,8 +17,8 @@ limitations under the License.
 package controller
 
 import (
+	"bytes"
 	"context"
-	"database/sql"
 	"fmt"
 	"path/filepath"
 	"time"
@@ -31,7 +31,9 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/tools/remotecommand"
 	"k8s.io/client-go/util/homedir"
+	"k8s.io/kubectl/pkg/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -144,7 +146,6 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{RequeueAfter: time.Second * 5}, err
 	}
 
-	// log.Info("found name", "name", found.Name)
 	// If old db has already been dumped and it didn't update before, then start to create the subscription.
 	if instance.Spec.PgDump && !instance.Status.Upgrade {
 		log.Info("Start to create subscriptions.")
@@ -276,32 +277,47 @@ func (r *PgUpgradeReconciler) createSubscriptions(ctx context.Context, pg *pgupg
 		return err
 	}
 	podName := pods.Items[0].Name
-	log.Info("Pod name", "podName", podName)
 	namespace := "default"
 	pod, err := clientset.CoreV1().Pods(namespace).Get(context.Background(), podName, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
 	podIP := pod.Status.PodIP
-	fmt.Println(podIP)
+	log.Info("Pod IP and Name", "Pod Ip is ", podIP, "Pod Name is ", podName)
 
-	// Connect to the PostgreSQL database.
-	connectionString := fmt.Sprintf("host=%s port=%s user=postgres password=mysecretpassword dbname=mydatabase sslmode=disable", "127.0.0.1", pg.Spec.ServicePort)
-	fmt.Println(connectionString)
-	db, err := sql.Open("postgres", connectionString)
+	// Execute the command in the pod.
+	subscription := fmt.Sprintf("create subscription %s connection 'dbname=%s host=%s user=postgres password=postgres port=%s' publication %s;", pg.Spec.SubName, pg.Spec.DBName, pg.Spec.OldDBHost, pg.Spec.OldDBPort, pg.Spec.PubName)
+	cmd := []string{"psql", "-U", "postgres", "mydatabase", "-c", subscription}
+
+	req := clientset.CoreV1().RESTClient().
+		Post().
+		Namespace(namespace).
+		Resource("pods").
+		Name(podName).
+		SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Command: cmd,
+			Stdin:   false,
+			Stdout:  true,
+			Stderr:  true,
+		}, scheme.ParameterCodec)
+
+	exec, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
 	if err != nil {
 		return err
 	}
-	defer db.Close()
-
-	// Send a command to the table.
-	subscription := fmt.Sprintf("create subscription %s connection 'dbname=%s host=10.244.0.76 user=postgres password=postgres port=5432' publication %s;", pg.Spec.SubName, pg.Spec.DBName, pg.Spec.PubName)
-	_, err = db.Exec(subscription)
+	// Get the output of the command.
+	var stdout, stderr bytes.Buffer
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
+		Stdin:  nil,
+		Stdout: &stdout,
+		Stderr: &stderr,
+		Tty:    false,
+	})
 	if err != nil {
 		return err
 	}
-
-	log.Info("Subscription created", "subscription", subscription)
+	fmt.Println(stdout.String())
 
 	return nil
 }

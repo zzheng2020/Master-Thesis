@@ -90,3 +90,25 @@ log.Info("instance", "instance: ", instance)
 	if instance.Spec.PgDump {
 		log.Info("PgDump is done.")
 	}
+
+	
+--------------------------------------------------------------------------------
+
+
+		// // Connect to the PostgreSQL database.
+	// connectionString := fmt.Sprintf("host=%s port=%s user=postgres password=mysecretpassword dbname=mydatabase sslmode=disable", "127.0.0.1", pg.Spec.ServicePort)
+	// fmt.Println(connectionString)
+	// db, err := sql.Open("postgres", connectionString)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer db.Close()
+
+	// // Send a command to the table.
+	// subscription := fmt.Sprintf("create subscription %s connection 'dbname=%s host=10.244.0.76 user=postgres password=postgres port=5432' publication %s;", pg.Spec.SubName, pg.Spec.DBName, pg.Spec.PubName)
+	// _, err = db.Exec(subscription)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// log.Info("Subscription created", "subscription", subscription)

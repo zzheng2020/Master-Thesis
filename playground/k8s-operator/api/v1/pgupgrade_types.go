@@ -43,14 +43,17 @@ type PgUpgradeSpec struct {
 	// The host of the primary database.
 	OldDBHost string `json:"olddbhost,omitempty"`
 
+	// The port of the primary database.
+	OldDBPort string `json:"olddbport,omitempty"`
+
 	// The publication name in the tartget database.
 	PubName string `json:"pubname,omitempty"`
 
 	// Whether pg_dump is used to dump the data.
 	PgDump bool `json:"pgdump,omitempty"`
 
-	// The service port of the PostgreSQL
-	ServicePort string `json:"serviceport"`
+	// // The service port of the PostgreSQL
+	// ServicePort string `json:"serviceport"`
 }
 
 // PgUpgradeStatus defines the observed state of PgUpgrade
