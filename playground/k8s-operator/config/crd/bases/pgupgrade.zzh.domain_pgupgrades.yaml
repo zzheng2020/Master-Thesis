@@ -41,6 +41,9 @@ spec:
               image:
                 description: The container image of the PostgreSQL
                 type: string
+              olddbhost:
+                description: The host of the primary database.
+                type: string
               pgdump:
                 description: Whether pg_dump is used to dump the data.
                 type: boolean

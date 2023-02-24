@@ -40,6 +40,9 @@ type PgUpgradeSpec struct {
 	// The target database name.
 	DBName string `json:"dbname,omitempty"`
 
+	// The host of the primary database.
+	OldDBHost string `json:"olddbhost,omitempty"`
+
 	// The publication name in the tartget database.
 	PubName string `json:"pubname,omitempty"`
 

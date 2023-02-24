@@ -11,10 +11,11 @@ metadata:
 spec:
   # TODO(user): Add fields here
   image: postgres
-  subname: zzhsub
+  subname: zzhsub1
   dbname: mydatabase
   pubname: pub
+  olddbhost: '10.244.0.76'
   pgdump: true
-  serviceport: '56138'
+  serviceport: '63516'
 status:
   upgrade: false
