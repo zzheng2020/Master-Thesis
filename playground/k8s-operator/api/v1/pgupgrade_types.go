@@ -34,6 +34,8 @@ type PgUpgradeSpec struct {
 	// The container image of the PostgreSQL
 	Image string `json:"image,omitempty"`
 
+	// Namespace string `json:"namespace,omitempty"`
+
 	// The subscription name of the PostgreSQL
 	SubName string `json:"subname,omitempty"`
 

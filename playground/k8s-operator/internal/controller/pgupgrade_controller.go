@@ -24,7 +24,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/ngaut/log"
+
+	"sigs.k8s.io/controller-runtime/pkg/log"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -55,8 +57,14 @@ type PgUpgradeReconciler struct {
 }
 
 //+kubebuilder:rbac:groups=pgupgrade.zzh.domain,resources=pgupgrades,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=pgupgrade.zzh.domain,resources=pgupgrades/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=pgupgrade.zzh.domain,resources=pgupgrades/finalizers,verbs=update
+//+kubebuilder:rbac:groups=pgupgrade.zzh.domain,resources=pgupgrades/status,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=pgupgrade.zzh.domain,resources=pgupgrades/finalizers,verbs=get;list;watch;create;update;patch;delete
+
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=pods/exec,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -70,9 +78,10 @@ type PgUpgradeReconciler struct {
 func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	// _ = log.FromContext(ctx)
 
-	log := r.Log.WithValues("PgUpgrade", req.NamespacedName)
+	// log := r.Log.WithValues("PgUpgrade", req.NamespacedName)
+	log := log.FromContext(ctx)
 
-	log.Info("Reconcile function starts.")
+	log.V(1).Info("Reconcile function starts.")
 
 	// TODO(user): your logic here
 
@@ -81,7 +90,7 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	err := r.Get(ctx, req.NamespacedName, instance)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("PgUpgrade resource not found.")
+			log.V(1).Info("PgUpgrade resource not found.")
 			return ctrl.Result{}, nil
 		}
 
@@ -97,7 +106,7 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}, found)
 	if err != nil && errors.IsNotFound(err) {
 		dep := r.deploymentForPgUpgrade(instance)
-		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+		log.V(1).Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
 		// Create a new Deployment in K8s cluster.
 		err = r.Create(ctx, dep)
 		if err != nil {
@@ -114,7 +123,7 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	image := instance.Spec.Image
 	needUpdate := false
 	if (*found).Spec.Template.Spec.Containers[0].Image != image {
-		log.Info("Deployment spec.template.spec.container[0].image change", "from", (*found).Spec.Template.Spec.Containers[0].Image, "to", image)
+		log.V(1).Info("Deployment spec.template.spec.container[0].image change", "from", (*found).Spec.Template.Spec.Containers[0].Image, "to", image)
 		found.Spec.Template.Spec.Containers[0].Image = image
 		needUpdate = true
 	}
@@ -134,7 +143,7 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new service
 		svc := r.serviceForPgUpgrade(instance)
-		log.Info("Creating a new Service", "Service.Namespace", svc.Namespace, "Service.Name", svc.Name)
+		log.V(1).Info("Creating a new Service", "Service.Namespace", svc.Namespace, "Service.Name", svc.Name)
 		err = r.Create(ctx, svc)
 		if err != nil {
 			log.Error(err, "Failed to create a new Service.", "Service.Namespace", svc.Namespace, "Service.Name", svc.Name)
@@ -148,14 +157,14 @@ func (r *PgUpgradeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// If old db has already been dumped and it didn't update before, then start to create the subscription.
 	if instance.Spec.PgDump && !instance.Status.Upgrade {
-		log.Info("Start to create subscriptions.")
+		log.V(1).Info("Start to create subscriptions.")
 		instance.Status.Upgrade = true
 		err = r.createSubscriptions(ctx, instance, *found)
 		if err != nil {
 			log.Error(err, "Failed to create subscriptions.")
 			return ctrl.Result{RequeueAfter: time.Second * 5}, err
 		}
-		log.Info("Successfully create subscriptions.")
+		log.V(1).Info("Successfully create subscriptions.")
 	}
 
 	return ctrl.Result{}, nil
@@ -249,7 +258,7 @@ func labelsForPgUpgrade(name string) map[string]string {
 
 // Create subscriptions.
 func (r *PgUpgradeReconciler) createSubscriptions(ctx context.Context, pg *pgupgradev1.PgUpgrade, found appsv1.Deployment) error {
-
+	log := log.FromContext(ctx)
 	// Create a new clientset
 	var kubeconfig string
 	if home := homedir.HomeDir(); home != "" {
@@ -283,11 +292,14 @@ func (r *PgUpgradeReconciler) createSubscriptions(ctx context.Context, pg *pgupg
 		return err
 	}
 	podIP := pod.Status.PodIP
-	log.Info("Pod IP and Name", "Pod Ip is ", podIP, "Pod Name is ", podName)
+
+	log.V(1).Info("Pod IP and Name", "Pod Ip is ", podIP, "Pod Name is ", podName)
+	// log.V(1).Info("Pod IP and Name", "Pod Ip is ", podIP, "Pod Name is ", podName)
 
 	// Execute the command in the pod.
 	subscription := fmt.Sprintf("create subscription %s connection 'dbname=%s host=%s user=postgres password=postgres port=%s' publication %s;", pg.Spec.SubName, pg.Spec.DBName, pg.Spec.OldDBHost, pg.Spec.OldDBPort, pg.Spec.PubName)
-	cmd := []string{"psql", "-U", "postgres", "mydatabase", "-c", subscription}
+	// cmd := []string{"psql", "-U", "postgres", "mydatabase", "-c", subscription}
+	cmd := []string{"psql", "-U", "postgres", pg.Spec.DBName, "-c", subscription}
 
 	req := clientset.CoreV1().RESTClient().
 		Post().
