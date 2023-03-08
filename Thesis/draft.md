@@ -57,11 +57,11 @@ However, the monolithic architecture exhibits several limitations that hinder it
 
 * Resource Isolation Challenges
 
-  In addition, monolithic architecture is the lack of effective resource isolation. Once a monolithic application is deployed, it exists in either a running or stopped state. In this context, resources are not adequately isolated, and any issues that occur can result in all customers using the application experiencing disruptions. This lack of resource isolation increases the risk of system crashes and can lead to negative consequences for end-users.
+  In addition, monolithic architecture lack of effective resource isolation. Once a monolithic application is deployed, it exists in either a running or stopped state. In this context, resources are not adequately isolated, and any issues that occur can result in all customers using the application experiencing disruptions. This lack of resource isolation increases the risk of system crashes and can lead to negative consequences for end users.
 
 ### 2.1.2 Microservices
 
-The microservices architecture is designed to decouple solutions by breaking down functionality into discrete services \cite{dragoni_microservices_2017}. Rather than using a monolithic structure, a microservices architecture employs several supporting microservices, which are developed, managed, and iterated on independently. This approach enables engineers to create applications that revolve around domain components, making product delivery easier by leveraging cloud architecture and platform-based deployment, management, and service capabilities. By using decentralised components, engieeers can more efficiently manage the various services that comprise the application.
+The microservices architecture is designed to decouple solutions by breaking down functionality into discrete services \cite{dragoni_microservices_2017}. Rather than using a monolithic structure, a microservices architecture employs several supporting microservices, which are developed, managed, and iterated on independently. This approach enables engineers to create applications that revolve around domain components, making product delivery easier by leveraging cloud architecture and platform-based deployment, management, and service capabilities. By using decentralised components, engineers can more efficiently manage the various services that comprise the application.
 
 The microservices architecture provides several benefits over traditional monolithic architecture, including:
 
@@ -77,11 +77,42 @@ The microservices architecture provides several benefits over traditional monoli
 
   Each service unit of a microservice is deployed independently, running in a separate process. This means that modifications and deployments of microservices have no impact on other services, improving system stability and reducing the risk of downtime.
 
-## CAP Theorem
+## Container
 
+In the distant past, our approach to service deployment was to directly deploy them on hardware servers. However, this method presented numerous challenges when expanding services. To accommodate additional services, it was necessary to purchase additional servers and manually perform environment and service configurations, which were often error-prone and time-consuming, resulting in increased labor costs. As a consequence, service deployment and migration became highly inefficient. Initially, this method was suitable when the number of users and business volume on the Internet was limited. However, with the rapid expansion of businesses and the surge in the number of users, this approach to software service production was no longer viable. Deploying application services directly on the server presented three primary issues.
 
+* Interference of services
+  A server does not usually deploy just one service application, but multiple service applications. But as these services are all sharing server resources such as CPU, memory, hard disk and network IO in the server, then there is bound to be a situation where resources compete with each other and services affect each other.
+
+* Low resource utilisation
+  There are peaks and troughs in business, and when there is a trough, the resource utilisation of the server is much lower than when there is a peak in business. Therefore, the actual server resources are not utilised to their full potential during the business downturn.
+
+* Difficulty in migration and expansion
+  When the number of existing servers is not enough to cope with the fast-growing business, it is necessary to continuously expand the number of server instances. However, as the services are deployed directly in the servers, various dependency libraries, environment configurations and network configurations are required to migrate and expand the services, which is a complicated process and difficult to expand.
+
+Therefore, container technology has emerged as a solution to the challenges presented by directly deploying services on hardware servers.
+
+Containerization is a software deployment technique that consolidates the code of an application with all the necessary files and libraries essential for the application to operate on any infrastructure \cite{noauthor_what_nodate}. This deployment method offers a multitude of advantages, such as portability, scalability, fault tolerance, and agility.
+
+Portability is a significant benefit of containerization that enables software developers to deploy applications across multiple platforms without the need to rewrite the code. This simplifies the development process, as only a single application build is required for deployment to multiple operating systems. For instance, developers can run the same container on both Linux and Windows operating systems, making it more efficient to upgrade legacy application code to modern versions.
+
+Scalability is another advantage of containerization, as containers are lightweight software components that run efficiently. Virtual machines can start containerized applications more quickly, as they do not require a boot operating system. This enables software developers to add multiple containers for various applications on a single computer, with container clusters sharing computing resources from the same operating system without interfering with each other.
+
+Fault tolerance is an essential feature of containerization, where software development teams can build fault-tolerant applications by using multiple containers to run microservices on the cloud. Containerized microservices operate in a separate user space, and if one container fails, it does not affect other containers, resulting in increased application resilience and availability.
+
+Finally, agility is an important aspect of containerization. Containerized applications operate in a separate computing environment, enabling software developers to troubleshoot and make changes to the application code without disrupting the operating system, hardware, or other application services. This accelerates software release cycles and enables quick updates using the container model.
 
 ## ADP Plateform
+
+Ericsson has developed the Application Development Platform (ADP) ecosystem to facilitate the development of cloud-native applications and services \cite{9758043}. This platform offers extensive technical, process, and organizational support to developers who create cloud network functions or cloud-native applications within Ericsson. The ecosystem is equipped with various tools, processes, and guidelines that enable developers to build top-quality applications that align with the business's needs.
+
+The ADP ecosystem's architecture is based on modern microservices and container principles, which are widely utilized in contemporary software development. The microservices approach enables developers to deconstruct complex applications into smaller, more manageable components that can be developed and deployed independently. Containers offer a lightweight approach to bundling these components, making them more manageable and easier to move between different environments.
+
+Furthermore, the ADP ecosystem provides critical support for the large-scale reuse of microservices across various applications within Ericsson. This feature helps developers reduce development time and costs by enabling them to create microservices once and then reuse them across multiple applications. The ADP Program also offers numerous resources, such as templates, examples, FAQs, and tutorials, to guide developers in utilizing the platform effectively.
+
+The ADP ecosystem is an excellent platform for developers seeking to create cloud-native applications or cloud network functions within Ericsson. Its comprehensive support for technical, process and organizational aspects of software development makes it an ideal choice for teams looking to streamline their development processes while maintaining high levels of quality and efficiency.
+
+## Continuous Delivery and DevOps
 
 
 
@@ -91,7 +122,7 @@ The microservices architecture provides several benefits over traditional monoli
 @article{deacon2009model,
   title={Model-view-controller (mvc) architecture},
   author={Deacon, John},
-  journal={Online][Citado em: 10 de mar{\c{c}}o de 2006.] http://www. jdl. co. uk/briefings/MVC. pdf},
+  journal={Online][Citado em: 10 de mar{\c{c}}o de 2006.] http://www.jdl.co.uk/briefings/MVC.pdf},
   volume={28},
   year={2009}
 }
@@ -110,4 +141,27 @@ The microservices architecture provides several benefits over traditional monoli
 	date = {2017},
 	doi = {10.1007/978-3-319-67425-4_12},
 }
+
+
+@misc{noauthor_what_nodate,
+	title = {What is {Containerization}? - {Containerization} {Explained} - {AWS}},
+	shorttitle = {What is {Containerization}?},
+	url = {https://aws.amazon.com/what-is/containerization/},
+	abstract = {Find out what is Containerization and how to use Amazon Web Services for Containerization},
+	language = {en-US},
+	urldate = {2023-03-05},
+	journal = {Amazon Web Services, Inc.},
+	file = {Snapshot:/Users/zihengzhang/Zotero/storage/HPY57D32/containerization.html:text/html},
+}
+
+
+@ARTICLE{9758043,
+  author={Usman, Muhammad and Badampudi, Deepika and Smith, Chris and Nayak, Himansu},
+  journal={IEEE Software}, 
+  title={An Ecosystem for the Large-Scale Reuse of Microservices in a Cloud-Native Context}, 
+  year={2022},
+  volume={39},
+  number={5},
+  pages={68-75},
+  doi={10.1109/MS.2022.3167447}}
 ```
