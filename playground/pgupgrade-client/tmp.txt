@@ -48,3 +48,10 @@ func main() {
 
 	fmt.Println("Statement executed successfully")
 }
+
+
+
+// switch over
+// kill the old one
+// geo-replication
+// ADP diagram

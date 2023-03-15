@@ -61,7 +61,6 @@ func main() {
 	writeTicker := time.NewTicker(30 * time.Second)
 	defer writeTicker.Stop()
 
-	// Loop indefinitely
 	for {
 		select {
 		case <-readTicker.C:

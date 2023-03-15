@@ -112,9 +112,17 @@ Furthermore, the ADP ecosystem provides critical support for the large-scale reu
 
 The ADP ecosystem is an excellent platform for developers seeking to create cloud-native applications or cloud network functions within Ericsson. Its comprehensive support for technical, process and organizational aspects of software development makes it an ideal choice for teams looking to streamline their development processes while maintaining high levels of quality and efficiency.
 
-## Continuous Delivery and DevOps
+## DevOps and Continuous Delivery
+
+DevOps and continuous delivery are interrelated practices that work in tandem to foster a culture of collaboration and automation to optimize software delivery. The goal of these practices is to enhance software delivery by facilitating faster, more reliable, and high-quality releases through automation and collaborative efforts.
 
 
+
+
+
+## Kubernetes
+
+### Kubernetes Operator
 
 # Reference
 
