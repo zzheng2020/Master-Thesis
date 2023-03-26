@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-delete-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-delete-test
+  template:
+    metadata:
+      labels:
+        app: pg-delete-test
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: mysecretpassword
+            - name: POSTGRES_DB
+              value: mydatabase
+          ports:
+            - containerPort: 5433

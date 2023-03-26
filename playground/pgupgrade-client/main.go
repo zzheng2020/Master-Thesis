@@ -54,11 +54,11 @@ func main() {
 		"127.0.0.1", targetPort, "mydatabase", "postgres", "mysecretpassword")
 
 	// Create a ticker for calling read() every 10 seconds
-	readTicker := time.NewTicker(10 * time.Second)
+	readTicker := time.NewTicker(1 * time.Second)
 	defer readTicker.Stop()
 
 	// Create a ticker for calling write() every 30 seconds
-	writeTicker := time.NewTicker(30 * time.Second)
+	writeTicker := time.NewTicker(3 * time.Second)
 	defer writeTicker.Stop()
 
 	for {
