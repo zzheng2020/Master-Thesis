@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pg-delete-test
+  name: postgres-delete-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pg-delete-test
+      app: postgres-delete-test
   template:
     metadata:
       labels:
-        app: pg-delete-test
+        app: postgres-delete-test
     spec:
       containers:
         - name: postgres
-          image: postgres:14
+          image: postgres:13
           env:
             - name: POSTGRES_USER
               value: postgres
@@ -23,4 +23,11 @@ spec:
             - name: POSTGRES_DB
               value: mydatabase
           ports:
-            - containerPort: 5433
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc-delete-test

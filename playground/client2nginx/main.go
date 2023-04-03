@@ -4,13 +4,15 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"math/rand"
+	"time"
 
 	_ "github.com/lib/pq"
 )
 
 const (
 	host = "localhost"
-	port = 52993
+	port = 80
 	// port     = 60227
 	user     = "postgres"
 	password = "mysecretpassword"
@@ -29,7 +31,26 @@ func main() {
 
 	fmt.Println("Connected to the database!")
 
-	// Read records from the database
+	readTicker := time.NewTicker(10 * time.Second)
+	defer readTicker.Stop()
+
+	// Create a ticker for calling write() every 30 seconds
+	writeTicker := time.NewTicker(30 * time.Second)
+	defer writeTicker.Stop()
+
+	for {
+		select {
+		case <-readTicker.C:
+			read(db)
+		case <-writeTicker.C:
+			write(db)
+		}
+	}
+}
+
+func read(db *sql.DB) {
+	fmt.Println("====== begin the read ======")
+
 	readQuery := `SELECT * FROM table_1`
 	rows, err := db.Query(readQuery)
 	if err != nil {
@@ -46,4 +67,24 @@ func main() {
 		}
 		fmt.Printf("id: %s\n", id)
 	}
+
+	fmt.Println("====== finish the read ======")
+}
+
+func write(db *sql.DB) {
+	// Connect to the PostgreSQL database
+
+	for {
+		randomID := rand.Intn(1000)
+		fmt.Println("randomID: ", randomID)
+		// Send a write query to the database
+		_, err := db.Exec("INSERT INTO table_1 VALUES ($1)", randomID)
+		if err != nil {
+			continue
+		} else {
+			break
+		}
+	}
+
+	fmt.Println("====== suceessfully write to database ======")
 }

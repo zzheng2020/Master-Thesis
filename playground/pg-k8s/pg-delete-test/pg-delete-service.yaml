@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-delete-test
+spec:
+  selector:
+    app: postgres-delete-test
+  ports:
+    - name: postgres-delete-test
+      port: 5432
+      targetPort: 5432
+  type: LoadBalancer
