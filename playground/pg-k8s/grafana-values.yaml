@@ -1,0 +1,14 @@
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: PostgreSQL
+        type: postgres
+        url: 10.244.0.168:5432
+        database: mydatabase
+        user: postgres
+        secureJsonData:
+          password: mysecretpassword
+        jsonData:
+          sslmode: "disable"
+          postgresVersion: 1300

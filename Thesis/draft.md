@@ -16,7 +16,7 @@
   5. Evaluation
   6. Conclusion
 
-# Introduction
+# 1. Introduction
 
 # 2. Background
 
@@ -77,7 +77,7 @@ The microservices architecture provides several benefits over traditional monoli
 
   Each service unit of a microservice is deployed independently, running in a separate process. This means that modifications and deployments of microservices have no impact on other services, improving system stability and reducing the risk of downtime.
 
-## Container
+## 2.2 Container
 
 In the distant past, our approach to service deployment was to directly deploy them on hardware servers. However, this method presented numerous challenges when expanding services. To accommodate additional services, it was necessary to purchase additional servers and manually perform environment and service configurations, which were often error-prone and time-consuming, resulting in increased labor costs. As a consequence, service deployment and migration became highly inefficient. Initially, this method was suitable when the number of users and business volume on the Internet was limited. However, with the rapid expansion of businesses and the surge in the number of users, this approach to software service production was no longer viable. Deploying application services directly on the server presented three primary issues.
 
@@ -100,9 +100,9 @@ Scalability is another advantage of containerization, as containers are lightwei
 
 Fault tolerance is an essential feature of containerization, where software development teams can build fault-tolerant applications by using multiple containers to run microservices on the cloud. Containerized microservices operate in a separate user space, and if one container fails, it does not affect other containers, resulting in increased application resilience and availability.
 
-Finally, agility is an important aspect of containerization. Containerized applications operate in a separate computing environment, enabling software developers to troubleshoot and make changes to the application code without disrupting the operating system, hardware, or other application services. This accelerates software release cycles and enables quick updates using the container model.
+Moreover, agility is an important aspect of containerization. Containerized applications operate in a separate computing environment, enabling software developers to troubleshoot and make changes to the application code without disrupting the operating system, hardware, or other application services. This accelerates software release cycles and enables quick updates using the container model.
 
-## ADP Plateform
+## 2.3 ADP Plateform
 
 Ericsson has developed the Application Development Platform (ADP) ecosystem to facilitate the development of cloud-native applications and services \cite{9758043}. This platform offers extensive technical, process, and organizational support to developers who create cloud network functions or cloud-native applications within Ericsson. The ecosystem is equipped with various tools, processes, and guidelines that enable developers to build top-quality applications that align with the business's needs.
 
@@ -112,17 +112,96 @@ Furthermore, the ADP ecosystem provides critical support for the large-scale reu
 
 The ADP ecosystem is an excellent platform for developers seeking to create cloud-native applications or cloud network functions within Ericsson. Its comprehensive support for technical, process and organizational aspects of software development makes it an ideal choice for teams looking to streamline their development processes while maintaining high levels of quality and efficiency.
 
-## DevOps and Continuous Delivery
+## 2.4 DevOps and Continuous Delivery
 
 DevOps and continuous delivery are interrelated practices that work in tandem to foster a culture of collaboration and automation to optimize software delivery. The goal of these practices is to enhance software delivery by facilitating faster, more reliable, and high-quality releases through automation and collaborative efforts.
 
+DevOps, a portmanteau of "development" and "operations," is an innovative approach that aims to integrate software development and IT operations seamlessly. This interdisciplinary methodology is designed to bridge the gap between these traditionally siloed domains, fostering collaboration, communication, and efficiency. By leveraging a suite of tools, practices, and cultural shifts, DevOps aims to enhance the software development lifecycle (SDLC) through continuous delivery, automated testing, and rapid iteration. As a result, organizations employing DevOps principles can improve the quality, reliability, and speed of their software deployments. Moreover, this holistic approach promotes a culture of shared responsibility, enabling teams to respond more effectively to changing requirements and mitigating risks associated with traditional development methodologies. In essence, DevOps represents a paradigm shift in software engineering, with the potential to reshape organizational structures and drive significant advancements in the field.
+
+Continuous Delivery (CD) is a software engineering approach that emphasizes the automation and streamlining of the software release process, thereby ensuring rapid and reliable deployment of new features and bug fixes. As an integral component of the DevOps methodology, CD fosters a culture of iterative improvement, facilitating seamless integration of code changes into a shared repository, and subsequently delivering these changes to production environments with minimal human intervention.
+
+CD relies on a robust suite of tools and practices, including version control, automated build processes, testing frameworks, and deployment mechanisms, which collectively contribute to reduced lead times and increased deployment frequency. By promoting a systematic, reproducible, and auditable release process, CD mitigates risks associated with manual deployments and fosters greater collaboration among development and operations teams. Furthermore, this approach enables organizations to respond swiftly to changing market demands, enhance customer satisfaction, and maintain a competitive edge. Moreover, Continuous Delivery represents a transformative paradigm within the software engineering landscape, driving innovation and efficiency in an increasingly complex and rapidly evolving technological landscape.
+
+## 2.5 Kubernetes
+
+As previously discussed, Docker proves to be a powerful tool for the development of microservices systems. However, in the context of clusters comprising tens of thousands of containers, numerous challenges arise in terms of scheduling, managing, and dispatching these resources. Consequently, an efficient and flexible management system is required to address these concerns. Kubernetes was developed as a solution to these issues, with its name derived from the Greek word for "helmsman" or "pilot." The platform builds on Google's extensive experience in managing large-scale production workloads and incorporates the best practices and ideas from the community.
+
+Kubernetes is a portable, scalable, open-source platform designed for the management of containerized workloads and services. It enables declarative configuration and automation, while boasting a large, rapidly growing ecosystem of services, support, and tools. Utilizing Kubernetes allows for rapid application deployment, efficient scaling, seamless integration of new application features, resource conservation, and optimization of hardware resource utilization.
+
+Furthermore, Kubernetes offers several key features, including:
+
+1. Portability: Support for public, private, hybrid, and multi-cloud environments.
+2. Extensibility: A modular architecture that allows for plug-ins, mounting, and combination of components.
+3. Automation: Facilitation of automatic deployment, restart, replication, and scaling/extension.
+
+### 2.5.1 Kubernetes Architecture
+
+To provide a concise overview, the architecture of Kubernetes consists of a Master managing a group of Nodes.
+
+The Master possesses the following components:
+
+1. API server: The gateway for all command requests in Kubernetes.
+2. Scheduler: Utilizes a scheduling algorithm to allocate requested resources to a Node.
+3. Controller: Manages Kubernetes resource objects.
+4. etcd: Stores the resource objects.
+
+In contrast, Nodes encompass the following elements:
+
+1. Kubelet: Present on each Node, it executes resource manipulation instructions.
+2. Kube-proxy: Manages load balancing between services.
+3. Pod: Represents the fundamental unit (smallest manageable unit) within Kubernetes, which houses the container. Kubernetes manages Pods rather than individual containers.
+4. Docker: Provides the base environment for container execution, functioning as the container engine.
+5. Fluentd: Offers log collection services.
+
+This structure enables Kubernetes to efficiently manage containerized workloads and services while maintaining a high level of automation and flexibility.
+
+### 2.5.2 Kubernetes Core Components
+
+Kubernetes encompasses a variety of fundamental components, including Pods, Kubelet, ReplicaSet, and Deployment, which together form the basis for efficient container management and orchestration within the platform.
+
+Kubernetes serves as a container management system, though it does not directly interact with containers. Instead, it operates on the smallest unit called a Pod, which indirectly manages containers. A Master node corresponds to a group of Node nodes, with the Master node responsible for scheduling, network management, controller, and resource object storage. Containers are housed within the Node node, which in turn, stores them inside the Pod. Pods can encapsulate single or multiple containers.
+
+Kubelet is tasked with local Pod maintenance, while kube-proxy manages load balancing between multiple Pods. A Pod is a container that encapsulates other containers created by Docker, functioning as a virtualized group. Pods act as standalone hosts and can house one or more containers. Each Pod possesses its own IP address and hostname, providing an independent sandbox environment.
+
+Pods are typically employed for managing groups of related services during service deployment. They can deploy a single service or a group of related services, which are sets of services connected through a call path of a chain call. Kubernetes excels at managing web service clustering through the control of the number of Pods, while the underlying network of Pods and data storage is facilitated by the creation of Pause containers prior to the establishment of internal containers. Service containers can access localhost, offering high-performance access to local services.
+
+ReplicaSet controllers maintain the desired number of Pod replicas or "service clusters," ensuring consistent replica numbers. In case a Pod service fails, the ReplicaSet controller immediately recreates a new Pod. Replica Controllers utilize tag selectors to maintain a group of related services. In newer versions of Kubernetes, ReplicaSet is recommended over the deprecated ReplicationController.
+
+Deployment objects represent the service deployment architecture model, enabling rolling updates. While ReplicaSet controllers control the number of Pod replicas, they do not support rolling updates. Deployment objects, on the other hand, support rolling updates and are often used in conjunction with ReplicaSets. Deployment manages ReplicaSets, with the latter reestablishing new ReplicaSets and creating new Pods to facilitate project version updates when needed.
+
+### 2.5.3 Stateful vs. Stateless
+
+Stateful and Stateless resources are critical concepts in Kubernetes, particularly when addressing containerized deployment challenges. When deploying PostgreSQL within containers, data loss becomes a significant concern due to the lifecycle of both containers and Pods. Kubernetes does not utilize Deployment for managing stateful services; instead, it employs Deployment for stateless services and StatefulSet for stateful services deployment.
+
+Stateful services are characterized by real-time data storage requirements. In a stateful service cluster, when a service is temporarily removed and later rejoined to the network, the unavailability of the cluster network may present issues. On the other hand, stateless services do not necessitate real-time data storage. Consequently, in a stateless service cluster, temporary removal and reintegration of a service into the network will not impact the clustered service.
+
+StatefulSet is employed to address the challenges associated with using containerized deployment for stateful services. This deployment model is specifically designed for stateful services, ensuring that the Hostname remains unaltered after Pod recreation. This stability enables the Pod to associate data through the Hostname, ultimately improving the management and resilience of stateful services within Kubernetes.
+
+### 2.5.4 Kubernetes Operator
+
+The Kubernetes Operator is a concept designed to encapsulate the knowledge and objectives of an operations professional responsible for managing a service or a set of services. These professionals possess an in-depth understanding of system operations, deployment, and problem resolution. Automation is a preferred method for handling repetitive tasks in the context of Kubernetes workloads, and the Operator pattern serves to embody the task automation code written outside the functionality provided by Kubernetes itself \cite{dobies2020kubernetes}.
+
+Operators function by extending the Kubernetes control plane and API. They introduce an endpoint (referred to as a custom resource or CR) to the Kubernetes API, which also incorporates a control plane component that monitors and maintains new resource types. An Operator comprises a set of Controllers, each listening to specific Kubernetes resources. These Controllers can implement a reconciliation loop, with each Controller being responsible for monitoring a designated resource and triggering reconciliation upon creation, update, or deletion of the monitored resource.
+
+Several open-source projects facilitate the creation of Kubernetes Operators, such as Operator SDK, Kubebuilder, KUDO, and Metacontroller. These tools streamline the development and management of Operators within the Kubernetes ecosystem.
+
+Kubernetes Controllers, on the other hand, are non-terminating loops that regulate the state of the system, striving to align the current state with the desired state as closely as possible through a process known as the Reconciliation loop. In the context of Kubernetes, a set of built-in Controllers operates within the controller-manager located in the master node. These Controllers work in tandem with Operators to ensure efficient and accurate management of resources in a Kubernetes environment.
+
+## 2.6 Flux
+
+Flux is a specialized tool designed to maintain synchronization between Kubernetes clusters and configuration sources, such as Git repositories. This synchronization enables the automation of updates to the configuration when new code deployments arise. Developed with a focus on leveraging Kubernetes' API extension system, Flux seamlessly integrates with core components of the Kubernetes ecosystem, including Prometheus.
+
+One of the key strengths of Flux is its support for multi-tenancy, allowing for the efficient management of multiple tenants within a single cluster. Additionally, Flux facilitates the synchronization of an arbitrary number of Git repositories, providing flexibility and adaptability in managing diverse sources of configuration. This capability ensures that the Kubernetes clusters remain up-to-date with the latest configurations, enhancing the efficiency and reliability of container management and orchestration.
+
+# 3. Method
+
+# 4. Work
+
+# 5. Results
+
+# 6. Conculsions
 
 
-
-
-## Kubernetes
-
-### Kubernetes Operator
 
 # Reference
 
@@ -172,4 +251,22 @@ DevOps and continuous delivery are interrelated practices that work in tandem to
   number={5},
   pages={68-75},
   doi={10.1109/MS.2022.3167447}}
+  
+@book{dobies2020kubernetes,
+  title={Kubernetes operators: Automating the container orchestration platform},
+  author={Dobies, Jason and Wood, Joshua},
+  year={2020},
+  publisher={O'Reilly Media}
+}
+
+@misc{flux,
+	title = {Flux Documentation},
+	shorttitle = {Flux Documentation},
+	url = {https://fluxcd.io/flux/},
+	abstract = {Flux is a tool for keeping Kubernetes clusters in sync with sources of configuration (like Git repositories), and automating updates to configuration when there is new code to deploy.},
+	language = {en-US},
+	urldate = {2023-04-11},
+	journal = {Flux},
+	file = {Snapshot:/Users/zihengzhang/Zotero/storage/HPY57D32/containerization.html:text/html},
+}
 ```
