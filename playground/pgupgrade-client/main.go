@@ -39,7 +39,8 @@ func main() {
 	}
 
 	// Get the PostgreSQL service
-	serviceName := "postgres-master"
+	// serviceName := "postgres-master"
+	serviceName := "nginx-service"
 	service, err := clientset.CoreV1().Services("default").Get(context.Background(), serviceName, metav1.GetOptions{})
 	if err != nil {
 		panic(err.Error())
@@ -49,7 +50,7 @@ func main() {
 
 	// Create a connection string to the PostgreSQL database
 	// ! NOTE: we need to run `minikube service <service-name>` to forward the port.
-	targetPort := 60227
+	targetPort := 62643
 	connString := fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=disable",
 		"127.0.0.1", targetPort, "mydatabase", "postgres", "mysecretpassword")
 
@@ -61,14 +62,20 @@ func main() {
 	writeTicker := time.NewTicker(3 * time.Second)
 	defer writeTicker.Stop()
 
+	// read from database every 10 seconds
 	for {
-		select {
-		case <-readTicker.C:
-			read(connString)
-		case <-writeTicker.C:
-			write(connString)
-		}
+		read(connString)
+		time.Sleep(10 * time.Second)
 	}
+
+	// for {
+	// 	select {
+	// 	case <-readTicker.C:
+	// 		read(connString)
+	// 	case <-writeTicker.C:
+	// 		write(connString)
+	// 	}
+	// }
 
 }
 
@@ -78,14 +85,16 @@ func read(connString string) {
 	// Connect to the PostgreSQL database
 	db, err := sql.Open("postgres", connString)
 	if err != nil {
-		panic(err.Error())
+		// panic(err.Error())
+		fmt.Println(err.Error())
 	}
 	defer db.Close()
 
 	// Send a read query to the database
-	rows, err := db.Query("SELECT * FROM table_1")
+	rows, err := db.Query("SELECT count(*) FROM table_1")
 	if err != nil {
-		panic(err.Error())
+		// panic(err.Error())
+		fmt.Println(err.Error())
 	}
 	defer rows.Close()
 
@@ -94,7 +103,9 @@ func read(connString string) {
 		var id string
 		err := rows.Scan(&id)
 		if err != nil {
-			panic(err.Error())
+			// panic(err.Error())
+			fmt.Println(err.Error())
+
 		}
 		fmt.Printf("id: %s\n", id)
 	}

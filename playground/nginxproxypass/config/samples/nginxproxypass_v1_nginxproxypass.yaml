@@ -1,0 +1,12 @@
+apiVersion: nginxproxypass.my.domain/v1
+kind: Nginxproxypass
+metadata:
+  labels:
+    app.kubernetes.io/name: nginxproxypass
+    app.kubernetes.io/instance: nginxproxypass-sample
+    app.kubernetes.io/part-of: nginxproxypass
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: nginxproxypass
+  name: nginxproxypass-sample
+spec:
+  # TODO(user): Add fields here

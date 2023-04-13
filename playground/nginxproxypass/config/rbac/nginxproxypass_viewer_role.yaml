@@ -1,0 +1,27 @@
+# permissions for end users to view nginxproxypasses.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: nginxproxypass-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: nginxproxypass
+    app.kubernetes.io/part-of: nginxproxypass
+    app.kubernetes.io/managed-by: kustomize
+  name: nginxproxypass-viewer-role
+rules:
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses/status
+  verbs:
+  - get

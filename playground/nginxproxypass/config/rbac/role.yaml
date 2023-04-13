@@ -1,0 +1,33 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses/status
+  verbs:
+  - get
+  - patch
+  - update

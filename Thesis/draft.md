@@ -1,4 +1,4 @@
-# Achieving High Availability in Lifecycle Management of Cloud-Native Network Functions: A Case Study of Database Version Changes
+# Achieving High Availability in Lifecycle Management of Cloud-Native Network Functions: A Prototype of Database Version Changes
 
 * Content
   1. Intoduction
@@ -193,7 +193,9 @@ Flux is a specialized tool designed to maintain synchronization between Kubernet
 
 One of the key strengths of Flux is its support for multi-tenancy, allowing for the efficient management of multiple tenants within a single cluster. Additionally, Flux facilitates the synchronization of an arbitrary number of Git repositories, providing flexibility and adaptability in managing diverse sources of configuration. This capability ensures that the Kubernetes clusters remain up-to-date with the latest configurations, enhancing the efficiency and reliability of container management and orchestration.
 
-# 3. Method
+# 3. System Design
+
+
 
 # 4. Work
 

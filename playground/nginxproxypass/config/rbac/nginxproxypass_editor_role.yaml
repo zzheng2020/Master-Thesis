@@ -1,0 +1,31 @@
+# permissions for end users to edit nginxproxypasses.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: nginxproxypass-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: nginxproxypass
+    app.kubernetes.io/part-of: nginxproxypass
+    app.kubernetes.io/managed-by: kustomize
+  name: nginxproxypass-editor-role
+rules:
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - nginxproxypass.my.domain
+  resources:
+  - nginxproxypasses/status
+  verbs:
+  - get

@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- nginxproxypass_v1_nginxproxypass.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples
