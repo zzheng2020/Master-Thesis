@@ -1,4 +1,5 @@
-# Achieving High Availability in Lifecycle Management of Cloud-Native Network Functions: A Prototype of Database Version Changes
+# High Availability in Lifecycle Management
+of Cloud-Native Network Functions: A Near-Zero Downtime Database Version Upgrade Prototype
 
 * Content
   1. Intoduction
@@ -112,7 +113,15 @@ Furthermore, the ADP ecosystem provides critical support for the large-scale reu
 
 The ADP ecosystem is an excellent platform for developers seeking to create cloud-native applications or cloud network functions within Ericsson. Its comprehensive support for technical, process and organizational aspects of software development makes it an ideal choice for teams looking to streamline their development processes while maintaining high levels of quality and efficiency.
 
-## 2.4 DevOps and Continuous Delivery
+## 2.4 CAP Theorem
+
+In a distributed system, it is possible to achieve at most two out of the following three properties: Consistency, Availability, and Partition Tolerance.
+
+### 2.4.1 Consitency
+
+Consistency refers to the condition where "all nodes see the same data at the same time." That is, after an update operation is successfully completed and returned to the client, all nodes have the same data at the same time. Thus, consistency concerns data uniformity in a distributed system.
+
+## 2.5 DevOps and Continuous Delivery
 
 DevOps and continuous delivery are interrelated practices that work in tandem to foster a culture of collaboration and automation to optimize software delivery. The goal of these practices is to enhance software delivery by facilitating faster, more reliable, and high-quality releases through automation and collaborative efforts.
 
@@ -122,7 +131,7 @@ Continuous Delivery (CD) is a software engineering approach that emphasizes the 
 
 CD relies on a robust suite of tools and practices, including version control, automated build processes, testing frameworks, and deployment mechanisms, which collectively contribute to reduced lead times and increased deployment frequency. By promoting a systematic, reproducible, and auditable release process, CD mitigates risks associated with manual deployments and fosters greater collaboration among development and operations teams. Furthermore, this approach enables organizations to respond swiftly to changing market demands, enhance customer satisfaction, and maintain a competitive edge. Moreover, Continuous Delivery represents a transformative paradigm within the software engineering landscape, driving innovation and efficiency in an increasingly complex and rapidly evolving technological landscape.
 
-## 2.5 Kubernetes
+## 2.6 Kubernetes
 
 As previously discussed, Docker proves to be a powerful tool for the development of microservices systems. However, in the context of clusters comprising tens of thousands of containers, numerous challenges arise in terms of scheduling, managing, and dispatching these resources. Consequently, an efficient and flexible management system is required to address these concerns. Kubernetes was developed as a solution to these issues, with its name derived from the Greek word for "helmsman" or "pilot." The platform builds on Google's extensive experience in managing large-scale production workloads and incorporates the best practices and ideas from the community.
 
@@ -134,7 +143,7 @@ Furthermore, Kubernetes offers several key features, including:
 2. Extensibility: A modular architecture that allows for plug-ins, mounting, and combination of components.
 3. Automation: Facilitation of automatic deployment, restart, replication, and scaling/extension.
 
-### 2.5.1 Kubernetes Architecture
+### 2.6.1 Kubernetes Architecture
 
 To provide a concise overview, the architecture of Kubernetes consists of a Master managing a group of Nodes.
 
@@ -155,7 +164,7 @@ In contrast, Nodes encompass the following elements:
 
 This structure enables Kubernetes to efficiently manage containerized workloads and services while maintaining a high level of automation and flexibility.
 
-### 2.5.2 Kubernetes Core Components
+### 2.6.2 Kubernetes Core Components
 
 Kubernetes encompasses a variety of fundamental components, including Pods, Kubelet, ReplicaSet, and Deployment, which together form the basis for efficient container management and orchestration within the platform.
 
@@ -169,7 +178,7 @@ ReplicaSet controllers maintain the desired number of Pod replicas or "service c
 
 Deployment objects represent the service deployment architecture model, enabling rolling updates. While ReplicaSet controllers control the number of Pod replicas, they do not support rolling updates. Deployment objects, on the other hand, support rolling updates and are often used in conjunction with ReplicaSets. Deployment manages ReplicaSets, with the latter reestablishing new ReplicaSets and creating new Pods to facilitate project version updates when needed.
 
-### 2.5.3 Stateful vs. Stateless
+### 2.6.3 Stateful vs. Stateless
 
 Stateful and Stateless resources are critical concepts in Kubernetes, particularly when addressing containerized deployment challenges. When deploying PostgreSQL within containers, data loss becomes a significant concern due to the lifecycle of both containers and Pods. Kubernetes does not utilize Deployment for managing stateful services; instead, it employs Deployment for stateless services and StatefulSet for stateful services deployment.
 
@@ -177,7 +186,7 @@ Stateful services are characterized by real-time data storage requirements. In a
 
 StatefulSet is employed to address the challenges associated with using containerized deployment for stateful services. This deployment model is specifically designed for stateful services, ensuring that the Hostname remains unaltered after Pod recreation. This stability enables the Pod to associate data through the Hostname, ultimately improving the management and resilience of stateful services within Kubernetes.
 
-### 2.5.4 Kubernetes Operator
+### 2.6.4 Kubernetes Operator
 
 The Kubernetes Operator is a concept designed to encapsulate the knowledge and objectives of an operations professional responsible for managing a service or a set of services. These professionals possess an in-depth understanding of system operations, deployment, and problem resolution. Automation is a preferred method for handling repetitive tasks in the context of Kubernetes workloads, and the Operator pattern serves to embody the task automation code written outside the functionality provided by Kubernetes itself \cite{dobies2020kubernetes}.
 
