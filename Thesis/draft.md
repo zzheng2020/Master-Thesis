@@ -1,8 +1,6 @@
-# High Availability in Lifecycle Management
-of Cloud-Native Network Functions: A Near-Zero Downtime Database Version Upgrade Prototype
-
+# High Availability in Lifecycle Management of Cloud-Native Network Functions: A Near-Zero Downtime Database Version Upgrade Prototype
 * Content
-  1. Intoduction
+  1. Introduction
      1. Overview
      2. Problem Statement
      3. Purpose
@@ -12,12 +10,86 @@ of Cloud-Native Network Functions: A Near-Zero Downtime Database Version Upgrade
      7. Sustainability and Ethics
      8. Structure of the thesis
   2. Background
-  3. Methodology
-  4. Implementation
+  3. System Design
+  4. System Implementation
   5. Evaluation
   6. Conclusion
 
 # 1. Introduction
+
+This chapter …
+
+## 1.1 Overview
+
+In today's rapidly evolving technological landscape, an increasing number of companies are leveraging cloud services to improve various aspects of their businesses, such as controllability, flexibility, scalability, security, and resource utilisation. Ericsson, a leading telecommunications company, is among those that have integrated cloud services into their operations. In particular, Ericsson extensively employs Kubernetes for container orchestration and management, with a focus on the crucial subject of database lifecycle management.
+
+## 1.2 Problem Statement
+
+Within a clustered infrastructure, databases frequently encounter the need for version upgrades or downgrades to accommodate client demands. Conventionally, these modifications necessitate system downtime, which subsequently incapacitates the entire system and inhibits service provision to end-users throughout this interval. As the pursuit of high availability grows increasingly paramount for a multitude of enterprises, it becomes crucial to guarantee uninterrupted services for clients while concurrently bolstering the organisation's business development objectives.
+
+## 1.3 Purpose
+
+Given the importance of minimising downtime during database version changes, the aim of this project is to develop an efficient and streamlined approach. By reducing the potential for human error, we hope to increase the overall reliability and stability of the system during these transitions.
+
+## 1.4 Goals
+
+Our primary goals are as follows:
+
+- Minimize the downtime required for database version changes, thereby ensuring uninterrupted service provision to customers.
+- Automate the process of database version transitions to reduce the possibility of potential mistakes due to human factors.
+- Enhance the overall system availability, contributing to improved customer satisfaction and the facilitation of business growth for Ericsson and its clients.
+- Develop a robust and scalable solution that can be easily adapted to accommodate future technological advancements and changing business requirements.
+
+By achieving these goals, we aim to create a more resilient and agile system that can better serve the needs of Ericsson and its customers in an increasingly competitive and dynamic business landscape.
+
+## 1.5 Research Methodology
+
+To achieve these goals, we propose employing a systematic research methodology that encompasses a combination of qualitative and quantitative research methods. This comprehensive approach will enable us to gather in-depth insights and develop a robust solution for minimising downtime during database version changes and automating the process. The research methodology comprises the following steps:
+
+1. Literature Review: An extensive literature review will be conducted to explore existing research and solutions related to database lifecycle management, version changes, and high availability in cloud environments. This step will provide a solid understanding of the current state-of-the-art and help identify potential gaps and opportunities for improvement. The literature review will also provide insights into relevant methodologies, tools, and best practices that can be adopted or adapted for this project.
+2. Requirement Analysis: Through interviews and surveys, we will engage with relevant stakeholders, including database administrators, system architects, and developers, to gather their perspectives and requirements for minimising downtime during database version changes and automating the process. This qualitative approach will help us understand the practical challenges faced by professionals in the field and ensure that the proposed solution aligns with their needs and expectations.
+3. Design and Development: Based on the findings from the literature review and requirement analysis, we will design and develop a prototype solution for minimising downtime and automating database version changes. This solution will be guided by industry best practices and take into account the specific context and requirements of Ericsson and its customers.
+4. Evaluation: Once the prototype solution is developed, we will conduct a series of quantitative experiments and performance tests to evaluate its effectiveness in minimising downtime and automating the process of database version changes. Key performance metrics, such as downtime duration, resource utilisation, and others will be measured and compared with pre-defined  goals. This quantitative approach will enable us to assess the efficacy of our solution and identify potential areas for improvement.
+5. Iterative Refinement: Based on the results of the quantitative evaluation, we will iteratively refine and optimise the prototype solution to address any identified issues and enhance its performance. This process will be repeated until the solution meets the pre-defined benchmarks and goals.
+6. Validation and Verification: Finally, the refined solution will be subjected to a rigorous validation and verification process to ensure its reliability, scalability, and adaptability in a real-world context. This step will involve further testing, as well as feedback from stakeholders and end-users, to confirm that the solution effectively addresses the identified challenges and meets the established goals.
+
+By following this comprehensive research methodology, we aim to develop a robust, scalable, and adaptable solution that effectively minimises downtime during database version changes, automates the process, and ultimately enhances system availability and business growth for Ericsson and its customers.
+
+## 1.6 Delimitations
+
+This section outlines the delimitations and boundaries of the project, clarifying the scope and limitations to better focus the research effort and ensure a comprehensive understanding of the context. The following delimitations apply to the current project:
+
+1. **Technological Stack**: The study will concentrate on Ericsson's specific technological stack, with a particular focus on Kubernetes for container orchestration and management. Consequently, the findings and proposed solution may not be directly applicable to other platforms or technological stacks without further adaptation.
+2. **Database Version Changes**: The primary focus of this project is on database version upgrades and downgrades. Other forms of database maintenance, such as data migration or schema changes, are beyond the scope of this research and will not be addressed in the proposed solution.
+3. **Ericsson's Business Context**: This research is conducted within the context of Ericsson's business operations and infrastructure, which may limit the generalisability of the findings and solution to other organisations. While the principles and techniques discussed may be applicable to a broader range of companies, additional research would be necessary to confirm their suitability for different business environments.
+4. **Solution Scalability**: The proposed solution is designed to be scalable and adaptable to accommodate future technological advancements and changing business requirements. However, this research does not explore every possible future scenario or change in detail, and the solution may need further adjustments to address unforeseen challenges.
+5. **Human Error**: The project aims to reduce the potential for human error during database version changes, but it does not claim to eliminate all human-related risks. Some degree of human involvement may still be necessary in certain aspects of the process, which could introduce potential mistakes.
+
+By delineating these delimitations, we aim to create a focused and relevant research project that addresses the specific needs and challenges faced by Ericsson in their database lifecycle management. Despite the limitations outlined above, we believe that the insights gained and the solution developed will significantly contribute to improving Ericsson's operational efficiency, customer satisfaction, and overall business growth.
+
+## 1.7 Sustainability and Ethics
+
+This section discusses the sustainability and ethical considerations associated with the research project. The development of a solution for minimising downtime during database version changes has several implications in terms of environmental, social, and economic sustainability, as well as ethical concerns.
+
+### 1.7.1 Environmental Sustainability
+
+By minimising system downtime and increasing overall system efficiency, the proposed solution has the potential to reduce energy consumption and related environmental impacts. A more efficient system requires fewer resources to maintain, which can lead to a reduced carbon footprint for Ericsson and its clients. Furthermore, automating the database version transition process can contribute to reducing electronic waste, as it may decrease the need for hardware replacement due to fewer failures or malfunctions.
+
+### 1.7.2 Social Sustainability
+
+The proposed solution can have a positive impact on social sustainability by enhancing the overall system availability and reliability, leading to improved customer satisfaction. By ensuring uninterrupted service provision, customers will experience fewer disruptions in their daily lives and businesses, which may contribute to increased trust in the services provided by Ericsson and its clients.
+
+### 1.7.3 Economic Sustainability
+
+Streamlining the database version change process and minimising downtime can lead to significant cost savings for Ericsson and its clients. Reduced downtime translates into lower operational costs and fewer financial losses resulting from service disruptions. Moreover, a more efficient and automated process reduces the possibility of human error, which may decrease the need for expensive troubleshooting and problem resolution.
+
+### 1.7.4 Ethical Considerations
+
+The automation of the database version transition process may have implications for the job market and workforce, particularly for those involved in manual database management and maintenance tasks. As a result, it is essential to consider the potential displacement of workers and the need for retraining and upskilling to ensure that employees remain competitive in an increasingly automated industry.
+
+Furthermore, the project must adhere to relevant data protection regulations and ensure that the proposed solution does not compromise the security and privacy of user data. The research and development process should take into account ethical principles such as transparency, accountability, and respect for user autonomy.
+
+Therefore, this research project aims to address the challenges of minimising downtime during database version changes while considering the environmental, social, and economic sustainability aspects, as well as ethical concerns. By developing a robust, efficient, and scalable solution, we strive to contribute to a more sustainable and ethical technological landscape that benefits Ericsson, its clients, and society at large.
 
 # 2. Background
 
@@ -117,9 +189,39 @@ The ADP ecosystem is an excellent platform for developers seeking to create clou
 
 In a distributed system, it is possible to achieve at most two out of the following three properties: Consistency, Availability, and Partition Tolerance.
 
-### 2.4.1 Consitency
+### 2.4.1 Consistency
 
 Consistency refers to the condition where "all nodes see the same data at the same time." That is, after an update operation is successfully completed and returned to the client, all nodes have the same data at the same time. Thus, consistency concerns data uniformity in a distributed system.
+
+Consistency can be viewed from two different perspectives: the client-side and the server-side. From the client-side, consistency mainly deals with how updated data is accessed during concurrent operations. From the server-side, it concerns how updates are replicated and distributed throughout the system to ensure eventual consistency.
+
+Consistency issues arise due to concurrent read and write operations; therefore, it is crucial to consider concurrent scenarios when understanding consistency problems.
+
+From the client-side perspective, different consistency policies dictate how updated data is accessed by different processes during concurrent operations.
+
+Here are three Consistency Policies:
+
+1. Strong Consistency: In the context of relational databases, strong consistency requires that any updated data be immediately visible to all subsequent accesses.
+
+2. Weak Consistency: Weak consistency tolerates situations where some or all subsequent accesses may not immediately see the updated data.
+
+3. Eventual Consistency: Eventual consistency ensures that the updated data becomes visible after a certain period.
+
+### 2.4.2 Availability
+
+Availability refers to the condition where "reads and writes always succeed," meaning that the service is consistently accessible and provides normal response times.
+
+In a distributed system with high availability, every non-failing node must respond to every request. Therefore, availability is generally measured by assessing system downtime. When describing the availability of a system, for example, we may say that the e-commerce platform Taobao achieves "five nines" availability, indicating a 99.999% uptime. This means that the total annual downtime does not exceed (1-0.99999) * 365 * 24 * 60 = 5.256 minutes, which is an exceptionally high standard.
+
+Good availability signifies that the system can effectively serve its users without experiencing issues such as operation failures or access timeouts, which could lead to poor user experiences. In a distributed system, various components like load balancers, web servers, application code, and database servers contribute to the overall design. The stability of any single component can directly impact the system's availability.
+
+### 2.4.3 Partition Tolerance
+
+Partition tolerance refers to the ability of "the system to continue operating despite arbitrary message loss or failure of part of the system." In other words, a distributed system can still provide services that meet consistency and availability requirements, even when encountering node or network partition failures.
+
+Partition tolerance is closely related to scalability. In distributed applications, system malfunctions may arise due to various distributed factors. Good partition tolerance ensures that the application appears to function as a coherent whole, even though it is a distributed system. For instance, if one or several machines in a distributed system fail, the remaining machines can still operate normally and meet system requirements. Alternatively, if there is a network anomaly that separates the distributed system into independent parts, each part can still maintain the operation of the distributed system. This demonstrates effective partition tolerance.
+
+In simpler terms, if the system can still function normally under circumstances of network disruption or message loss, it is considered to possess good partition tolerance.
 
 ## 2.5 DevOps and Continuous Delivery
 
@@ -204,9 +306,44 @@ One of the key strengths of Flux is its support for multi-tenancy, allowing for 
 
 # 3. System Design
 
+This chapter …
+
+## 3.1 Goals in System Design
+
+This section outlines the primary objectives we aim to accomplish in the design of a system that addresses the challenges associated with database version changes. These goals have been established to guide the development of a solution that effectively minimises downtime, automates processes, and remains transparent to clients.
+
+The main goals in the system design are as follows:
+
+1. **Perform Database Version Change**: Enable efficient and seamless transitions between different database versions, catering to the evolving needs of clients and businesses.
+2. **Minimise Downtime**: Reduce the duration of system downtime during database version changes to ensure uninterrupted service provision and maintain high availability for users.
+3. **Automate the Procedure**: Implement automation to minimize manual intervention in the database version change process, decreasing the potential for human error and increasing overall efficiency and reliability.
+4. **Transparent to Clients**: Ensure that the process of database version changes remains transparent to clients, allowing them to continue using the services without disruption or any discernible difference in performance during the transition.
+
+By focusing on these objectives in the system design, we aim to develop a comprehensive solution that addresses the limitations of conventional strategies while offering enhanced efficiency, reliability, and transparency. In doing so, we can better support the needs of Ericsson and its clients in an increasingly competitive and dynamic business landscape.
+
+## 3.2 Conventional Strategy
+
+This section describes the conventional strategy for implementing a change in the database version and discusses its limitations with respect to the need for high availability in modern business environments.
+
+The traditional implementation scheme for changing the database version consists of the following steps:
+
+1. Suspend the service, ceasing to receive user requests.
+2. Create a backup of the database that requires an upgrade.
+3. Establish a target version database within the cluster, and migrate the data from the backup created in step 2 to this target version database.
+4. Verify the consistency of the data in the target version database with the data in the original database.
+5. If the verification in step 4 is successful, resume the service and begin receiving user requests once more.
+
+While this approach is effective for managing database version changes, it necessitates a certain amount of system downtime. The duration of this downtime is contingent upon the speed of data migration and validation; the faster these processes, the less the service will be impacted.
+
+In today's business landscape, however, there is an increasing demand for high availability in conjunction with system stability. Table 1 illustrates common requirements for high availability. For instance, to attain the "five nines" target (i.e., 99.999\% high availability), services must experience minimal downtime. Evidently, the traditional implementation strategy is inadequate for meeting such stringent requirements. Consequently, the need for an alternative solution that can minimise downtime and maintain high availability during database version changes becomes paramount.
+
+\todo[inline]{//TODO: Insert Table one here.}
+
+## 3.3 Blue-Green Deployment
 
 
-# 4. Work
+
+# 4. System Implementation
 
 # 5. Results
 
