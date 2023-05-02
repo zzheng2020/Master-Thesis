@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"math/rand"
 	"path/filepath"
 	"time"
 
@@ -50,32 +49,32 @@ func main() {
 
 	// Create a connection string to the PostgreSQL database
 	// ! NOTE: we need to run `minikube service <service-name>` to forward the port.
-	targetPort := 62643
+	targetPort := 54165
 	connString := fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=disable",
 		"127.0.0.1", targetPort, "mydatabase", "postgres", "mysecretpassword")
 
 	// Create a ticker for calling read() every 10 seconds
-	readTicker := time.NewTicker(1 * time.Second)
+	readTicker := time.NewTicker(5 * time.Second)
 	defer readTicker.Stop()
 
 	// Create a ticker for calling write() every 30 seconds
-	writeTicker := time.NewTicker(3 * time.Second)
+	writeTicker := time.NewTicker(10 * time.Second)
 	defer writeTicker.Stop()
 
 	// read from database every 10 seconds
-	for {
-		read(connString)
-		time.Sleep(10 * time.Second)
-	}
-
 	// for {
-	// 	select {
-	// 	case <-readTicker.C:
-	// 		read(connString)
-	// 	case <-writeTicker.C:
-	// 		write(connString)
-	// 	}
+	// 	read(connString)
+	// 	time.Sleep(10 * time.Second)
 	// }
+
+	for {
+		select {
+		case <-readTicker.C:
+			read(connString)
+		case <-writeTicker.C:
+			write(connString)
+		}
+	}
 
 }
 
@@ -91,7 +90,8 @@ func read(connString string) {
 	defer db.Close()
 
 	// Send a read query to the database
-	rows, err := db.Query("SELECT count(*) FROM table_1")
+	query := "SELECT * FROM (SELECT id FROM table_1 ORDER BY id DESC LIMIT 5) AS top_five ORDER BY id DESC;"
+	rows, err := db.Query(query)
 	if err != nil {
 		// panic(err.Error())
 		fmt.Println(err.Error())
@@ -121,13 +121,12 @@ func write(connString string) {
 	}
 	defer db.Close()
 
+	startNum := 1000001
 	for {
-		randomID := rand.Intn(1000)
-		fmt.Println("randomID: ", randomID)
 		// Send a write query to the database
-		_, err = db.Exec("INSERT INTO table_1 VALUES ($1)", randomID)
+		_, err = db.Exec("INSERT INTO table_1 VALUES ($1)", startNum)
 		if err != nil {
-			panic(err.Error())
+			startNum++
 		} else {
 			break
 		}

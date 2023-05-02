@@ -341,9 +341,131 @@ In today's business landscape, however, there is an increasing demand for high a
 
 ## 3.3 Blue-Green Deployment
 
+In order to address the challenges associated with database version changes and achieve the goals outlined in the system design, the blue-green deployment strategy emerges as a viable approach. This section provides a professional description of the blue-green deployment strategy and explains how it contributes to the objectives of minimising downtime, automating processes, and maintaining transparency for clients.
 
+The blue-green deployment strategy involves creating two separate environments, referred to as "blue" and "green," which run concurrently. Each environment hosts a different version of the database, allowing for efficient and seamless transitions between versions with minimal downtime. The key advantage of this approach is that it enables continuous operation of the system while the database version is changed, thus addressing the goal of minimising downtime.
+
+There are four main step in Blue-Green Deployment strategy:
+
+1. **Preparation**: Initially, both blue and green environments are set up, with the blue environment hosting the current database version and the green environment hosting the target version. During this stage, the green environment is prepared and tested to ensure its readiness for the database version change.
+2. **Data Synchronization**: Data is synchronized between the blue and green environments to ensure consistency. This process is automated to reduce manual intervention, contributing to the goal of automating the procedure and increasing overall efficiency and reliability.
+3. **Switching**: Once the data synchronization is complete, the system switches from the blue environment to the green environment. This transition is seamless and occurs without any noticeable interruption in service provision, addressing the goal of maintaining transparency for clients.
+4. **Monitoring**: After the switch, the system is closely monitored to ensure that the new database version is functioning correctly and that there are no performance issues or inconsistencies. If any issues are detected, the system can quickly revert to the blue environment, ensuring minimal disruption to clients.
+
+The blue-green deployment strategy enables the efficient management of database version changes while minimising downtime, automating processes, and maintaining transparency for clients. By incorporating this strategy in the system design, we can develop a comprehensive solution that addresses the limitations of conventional strategies and better supports the needs of Ericsson and its clients in a competitive and dynamic business landscape.
+
+### 3.3.1 Advantages of Blue-Green Deployment Strategy
+
+The blue-green deployment strategy offers several advantages when implemented to address the challenges of database version changes. The followings outline the key benefits associated with this approach.
+
+1. Reduced Downtime: By maintaining two separate environments and enabling a seamless switch between them, the blue-green deployment strategy significantly reduces the downtime associated with database version changes. This ensures that clients experience minimal disruption in service provision, addressing the primary goal of minimizing downtime.
+2. Improved Reliability: The blue-green deployment strategy allows for thorough testing of the target version environment before transitioning to it. This ensures that potential issues can be identified and resolved before the switch, contributing to the overall reliability of the system during the database version change process.
+3. Enhanced Flexibility: The ability to quickly switch between the blue and green environments provides flexibility in handling any issues that may arise during the transition. In the event of a problem, the system can easily revert to the previous version, ensuring minimal impact on service provision.
+4. Risk Mitigation: The blue-green deployment strategy mitigates the risk associated with database version changes by enabling thorough testing and data synchronisation before the transition. This helps to prevent potential data loss or corruption during the process.
+5. Increased Agility: The ability to quickly and efficiently change database versions using the blue-green deployment strategy enables organisations to adapt more rapidly to evolving client demands and market conditions. This increased agility can provide a competitive advantage in a dynamic business landscape.
+
+Therefore, the blue-green deployment strategy offers a robust and effective solution for managing database version changes while addressing the key goals of minimising downtime, automating processes, and maintaining transparency for clients. By leveraging this approach in the system design, we can better support the needs of Ericsson and its clients in an increasingly competitive and dynamic business environment.
+
+## 3.4 Synchronisation between PostgreSQL Databases
+
+In the context of the blue-green deployment strategy, synchronisation between the two PostgreSQL databases is crucial for ensuring data consistency and maintaining transparency for clients during the database version change process. This section introduces logical replication as the primary method for achieving synchronisation between the two PostgreSQL databases, highlighting its advantages and relevance to the system design goals.
+
+### 3.4.1 Logical Replication
+
+Logical replication is a feature in PostgreSQL that enables the selective replication of data changes from one database to another. It facilitates real-time synchronisation between the two databases, ensuring that any changes made in the source database are instantly propagated to the target database. This approach is particularly well-suited for the blue-green deployment strategy, as it allows for seamless transitions between different database versions with minimal downtime and disruption to clients.
+
+### 3.4.2 Advantages of Logical Replication
+
+Logical replication offers several advantages that align with the system design goals, including:
+
+- **Minimised Downtime**: By enabling real-time synchronisation between the two databases, logical replication allows for seamless transitions between different database versions without significant downtime, ensuring high availability for users.
+- **Automated Procedure**: The replication process is largely automated, reducing manual intervention and the potential for human error, thereby increasing overall efficiency and reliability.
+- **Transparent to Clients**: As the data synchronisation occurs in real-time, clients can continue using the services without disruption or any discernible difference in performance during the transition.
+
+By incorporating logical replication in the synchronisation process, we can effectively address the challenges associated with database version changes, and achieve the system design goals of minimising downtime, automating processes, and maintaining transparency for clients.
+
+## 3.5 Monitoring Synchronisation Progress
+
+An essential aspect of ensuring a smooth database version change process is the ability to monitor the progress of synchronisation between the master and follower nodes. In PostgreSQL, the `pg_stat_replication` view provides information on the replication status, which can be utilised to determine when the synchronisation process is complete.
+
+### 3.5.1 Key Replication Metrics
+
+The following metrics provided by the `pg_stat_replication` view are crucial to understanding the synchronization progress:
+
+1. **sent_lsn**: This metric represents the latest Write-Ahead Log (WAL) position sent by the master node to the follower node.
+2. **pg_current_wal_flush_lsn**: This function returns the latest WAL position that has been flushed to disk on the master node.
+3. **pg_wal_lsn_diff(lsn1, lsn2)**: This function calculates the byte difference between two WAL positions.
+
+### 3.5.2 Determining Synchronization Completion
+
+To determine when the synchronization process is complete, we can compare the `sent_lsn` value with the `pg_current_wal_flush_lsn` value. When these two values match, it indicates that the latest WAL position sent by the master node has been flushed to disk, and the synchronization process is complete.
+
+Additionally, the `pg_wal_lsn_diff` function can be used to monitor the remaining byte difference between the master and follower nodes' WAL positions. This information can be useful in estimating the remaining synchronization time, allowing for more accurate predictions and adjustments to the system.
+
+By leveraging the information provided by the `pg_stat_replication` view and the associated functions, we can effectively monitor the synchronization progress between the master and follower PostgreSQL databases. This capability aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes. As a result, we can better support the needs of Ericsson and its clients in a competitive and dynamic business landscape.
+
+## 3.6 Integrating Blue-Green Deployment Strategy with Kubernetes
+
+As Ericsson extensively employs Kubernetes for container orchestration and management, it is essential to integrate the blue-green deployment strategy with Kubernetes to ensure seamless database version transitions. This section discusses the process of integrating the blue-green deployment strategy within a Kubernetes-based infrastructure and its benefits in the context of database lifecycle management.
+
+Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerised applications. By integrating the blue-green deployment strategy with Kubernetes, we can leverage the platform's powerful features to manage the database version changes more efficiently.
+
+Integrating the blue-green deployment strategy with Kubernetes offers several benefits, including:
+
+- **Scalability**: Kubernetes enables easy horizontal scaling of the database instances, ensuring that the system can accommodate the evolving needs of clients and businesses.
+- **Resource Utilization**: Containerization and the efficient use of resources within Kubernetes ensure optimal resource utilization, ultimately reducing costs and improving performance.
+- **Ease of Management**: Kubernetes provides a unified platform for managing the entire database lifecycle, simplifying the process of implementing and maintaining the blue-green deployment strategy.
+
+- **Fault Tolerance**: By leveraging the inherent fault tolerance and self-healing capabilities of Kubernetes, the integrated blue-green deployment strategy can effectively handle failures and maintain system stability during database version changes.
+- **Monitoring and Observability**: Kubernetes offers built-in monitoring and observability tools, enabling real-time insights into the performance and health of the database instances during the transition process. This facilitates prompt identification and resolution of issues, ensuring a smooth and reliable transition.
+
+By integrating the blue-green deployment strategy with Kubernetes, we can effectively address the challenges associated with database version changes while harnessing the powerful features of Kubernetes for container orchestration and management. This integration contributes to the achievement of the system design goals, including minimising downtime, automating processes, and maintaining transparency for clients, ultimately fostering a more resilient and agile system that can better serve the needs of Ericsson and its customers in a competitive and dynamic business landscape.
+
+### 3.6.1 Achieving the Blue-Green Deployment with Kubernetes Operator
+
+Kubernetes Operator is a framework for building Kubernetes-native applications, providing domain-specific knowledge to automate complex tasks. By integrating the blue-green deployment strategy with Kubernetes Operator, we can take advantage of its capabilities to manage the database version changes effectively, offering the following benefits:
+
+1. **Automation**: Kubernetes Operator enables automation of complex tasks associated with the blue-green deployment process, such as data synchronization and traffic switching, thus reducing manual intervention and potential human errors.
+2. **Extensibility**: Kubernetes Operator allows for the creation of custom resources that define the desired state of the system, making it adaptable to different database systems and future technological advancements.
+3. **Ease of Management**: Kubernetes Operator provides a unified platform for managing the entire database lifecycle, simplifying the implementation and maintenance of the blue-green deployment strategy.
+
+### 3.6.2 Custom Resource Definition (CRD)
+
+Custom Resource Definitions (CRDs) are a crucial component of Kubernetes that extend its API, enabling users to define, create, and manage new custom resources. In the context of the blue-green deployment strategy for database version changes, we use a CRD specifically designed for this purpose.
+
+To design the CRD for the blue-green deployment strategy, we define a schema that specifies the structure and properties of the custom resource. The schema includes the following fields:
+
+1. **apiVersion**: The version of the API used to create the CRD.
+2. **kind**: The type of the Kubernetes object, which in this case, is a custom resource related to blue-green deployment.
+3. **metadata**: Contains metadata about the custom resource, such as name, namespace, labels, and annotations.
+4. **spec**: The specification of the custom resource.
+
+By utilising the CRD, we can create and manage custom resources for the blue-green deployment strategy within the Kubernetes ecosystem. This approach allows us to achieve the system design goals, including minimising downtime, automating processes, and maintaining transparency for clients, ultimately fostering a more resilient and agile system that can better serve the needs of Ericsson and its customers in a competitive and dynamic business landscape.
 
 # 4. System Implementation
+
+This chapter …
+
+## 4.1 Achieving Logical Replication between PostgreSQL Databases
+
+Logical replication in PostgreSQL enables the efficient and seamless replication of data changes from a source (master) node to a target (follower) node. In the context of our system design, we leverage Kubernetes Operator to automate the configuration and management of logical replication between PostgreSQL databases.
+
+### 4.1.1 Configuring the Master Node
+
+To set up logical replication on the master node, Kubernetes Operator automates the following tasks:
+
+1. **Configure PostgreSQL settings**: The Operator updates the `postgresql.conf` file to enable logical replication by setting the `wal_level` to `logical`.
+2. **Create a publication**: The Operator uses the SQL command `CREATE PUBLICATION` to create a new publication that includes all tables.
+3. **Export the schema**: The Operator employs the `pg_dump` command to export the schema of the database to an SQL file.
+
+### 4.1.2 Configuring the Follower Node
+
+Kubernetes Operator automates the synchronization of the schema and the creation of a subscription on the follower node by performing the following tasks:
+
+1. **Synchronize the schema**: The Operator imports the schema from the master node using the `psql` command.
+2. **Create the subscription**: The Operator uses the SQL command `CREATE SUBSCRIPTION` to create a new subscription that connects to the master node's publication.
+
+By leveraging Kubernetes Operator, we can successfully establish and automate logical replication between the master and follower PostgreSQL databases. This approach aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes. As a result, we can better support the needs of Ericsson and its clients in a competitive and dynamic business landscape.
 
 # 5. Results
 
