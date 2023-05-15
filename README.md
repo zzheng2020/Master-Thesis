@@ -1,6 +1,6 @@
 # Master-Thesis
 
-This repository is dedicated to the Master's Thesis project of ZZHeng2020 at KTH Royal Institute of Technology. The thesis is entitled **"Achieving High Availability in the Lifecycle Management of Cloud-Native Network Functions."**
+This repository is dedicated to the Master's Thesis project of ZZHeng2020 at KTH Royal Institute of Technology. The thesis is entitled **"High Availability in Lifecycle Management of Cloud-Native Network Functions: A Near-Zero Downtime Database Version Change Prototype."**
 
 ## Work in Progress
 
