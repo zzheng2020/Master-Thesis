@@ -4,7 +4,7 @@ datasources:
     datasources:
       - name: PostgreSQL
         type: postgres
-        url: 10.244.1.129:5432
+        url: 10.244.1.156:5432
         database: mydatabase
         user: postgres
         secureJsonData:

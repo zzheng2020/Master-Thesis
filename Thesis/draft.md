@@ -319,7 +319,7 @@ The main goals in the system design are as follows:
 3. **Automate the Procedure**: Implement automation to minimize manual intervention in the database version change process, decreasing the potential for human error and increasing overall efficiency and reliability.
 4. **Transparent to Clients**: Ensure that the process of database version changes remains transparent to clients, allowing them to continue using the services without disruption or any discernible difference in performance during the transition.
 
-By focusing on these objectives in the system design, we aim to develop a comprehensive solution that addresses the limitations of conventional strategies while offering enhanced efficiency, reliability, and transparency. In doing so, we can better support the needs of Ericsson and its clients in an increasingly competitive and dynamic business landscape.
+By focusing on these objectives in the system design, we aim to develop a comprehensive solution that addresses the limitations of conventional strategies while offering enhanced efficiency, reliability, and transparency.
 
 ## 3.2 Conventional Strategy
 
@@ -390,19 +390,19 @@ An essential aspect of ensuring a smooth database version change process is the 
 
 ### 3.5.1 Key Replication Metrics
 
-The following metrics provided by the `pg_stat_replication` view are crucial to understanding the synchronization progress:
+The following metrics provided by the `pg_stat_replication` view are crucial to understanding the synchronisation progress:
 
 1. **sent_lsn**: This metric represents the latest Write-Ahead Log (WAL) position sent by the master node to the follower node.
 2. **pg_current_wal_flush_lsn**: This function returns the latest WAL position that has been flushed to disk on the master node.
 3. **pg_wal_lsn_diff(lsn1, lsn2)**: This function calculates the byte difference between two WAL positions.
 
-### 3.5.2 Determining Synchronization Completion
+### 3.5.2 Determining Synchronisation Completion
 
-To determine when the synchronization process is complete, we can compare the `sent_lsn` value with the `pg_current_wal_flush_lsn` value. When these two values match, it indicates that the latest WAL position sent by the master node has been flushed to disk, and the synchronization process is complete.
+To determine when the synchronisation process is complete, we can compare the `sent_lsn` value with the `pg_current_wal_flush_lsn` value. When these two values match, it indicates that the latest WAL position sent by the master node has been flushed to disk, and the synchronisation process is complete.
 
-Additionally, the `pg_wal_lsn_diff` function can be used to monitor the remaining byte difference between the master and follower nodes' WAL positions. This information can be useful in estimating the remaining synchronization time, allowing for more accurate predictions and adjustments to the system.
+Additionally, the `pg_wal_lsn_diff` function can be used to monitor the remaining byte difference between the master and follower nodes' WAL positions. This information can be useful in estimating the remaining synchronisation time, allowing for more accurate predictions and adjustments to the system.
 
-By leveraging the information provided by the `pg_stat_replication` view and the associated functions, we can effectively monitor the synchronization progress between the master and follower PostgreSQL databases. This capability aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes. As a result, we can better support the needs of Ericsson and its clients in a competitive and dynamic business landscape.
+By leveraging the information provided by the `pg_stat_replication` view and the associated functions, we can effectively monitor the synchronisation progress between the master and follower PostgreSQL databases. This capability aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes. As a result, we can better support the needs of Ericsson and its clients in a competitive and dynamic business landscape.
 
 ## 3.6 Integrating Blue-Green Deployment Strategy with Kubernetes
 
@@ -444,7 +444,7 @@ By utilising the CRD, we can create and manage custom resources for the blue-gre
 
 # 4. System Implementation
 
-This chapter …
+The system implementation chapter focuses on the code and logic implemented in the `PgUpgradeReconciler` to achieve the desired functionality. This chapter explains the code implementation and the processes involved in reconciling a PgUpgrade object to create and manage PostgreSQL upgrades.
 
 ## 4.1 Achieving Logical Replication between PostgreSQL Databases
 
@@ -460,18 +460,118 @@ To set up logical replication on the master node, Kubernetes Operator automates 
 
 ### 4.1.2 Configuring the Follower Node
 
-Kubernetes Operator automates the synchronization of the schema and the creation of a subscription on the follower node by performing the following tasks:
+Kubernetes Operator automates the synchronisation of the schema and the creation of a subscription on the follower node by performing the following tasks:
 
-1. **Synchronize the schema**: The Operator imports the schema from the master node using the `psql` command.
+1. **Synchronise the schema**: The Operator imports the schema from the master node using the `psql` command.
 2. **Create the subscription**: The Operator uses the SQL command `CREATE SUBSCRIPTION` to create a new subscription that connects to the master node's publication.
 
-By leveraging Kubernetes Operator, we can successfully establish and automate logical replication between the master and follower PostgreSQL databases. This approach aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes. As a result, we can better support the needs of Ericsson and its clients in a competitive and dynamic business landscape.
+By leveraging Kubernetes Operator, we can successfully establish and automate logical replication between the master and follower PostgreSQL databases. This approach aligns with our system design goals, ensuring minimal downtime, automated processes, and transparent operation for clients during database version changes.
 
-# 5. Results
+## 4.1 `PgUpgradeReconciler` Structure
 
-# 6. Conculsions
+The `PgUpgradeReconciler` struct consists of the following fields:
 
+1. `client.Client`: An instance of the client, which is responsible for performing CRUD operations on Kubernetes objects.
+2. `Scheme`: A runtime.Scheme object that enables conversion between Go structs and GroupVersionKinds.
+3. `Log`: An instance of the logr.Logger to log messages at different verbosity levels.
 
+## 4.2 Kubernetes RBAC
+
+Kubebuilder annotations define the necessary RBAC permissions for the controller to manage resources:
+
+1. `pgupgrades`: Custom resource for managing PostgreSQL upgrades.
+2. `pgupgrades/status`: Subresource for managing the status of the PgUpgrade objects.
+3. `pgupgrades/finalizers`: Subresource for managing finalizers on PgUpgrade objects.
+4. `pods`, `deployments`, `services`, and `configmaps`: Standard Kubernetes resources required for creating, managing, and deleting related resources.
+
+## 4.3 Reconciliation Process
+
+The `Reconcile` function is the core of the controller and handles the reconciliation process. It starts by retrieving the PgUpgrade instance and checks if it exists. If not found, the reconcile function returns a nil error, allowing the controller to continue with other instances.
+
+### 4.3.1 Controller Setup
+
+The `PgUpgradeReconciler` struct is used to define the controller for the PgUpgrade system. The `SetupWithManager` function is responsible for setting up the controller with the Manager. It associates the controller with the `pgupgradev1.PgUpgrade` resource and returns the result.
+
+### 4.3.1 Deployment Creation
+
+The function checks if the PgUpgrade deployment already exists. If not, it creates a new deployment using the `deploymentForPgUpgrade` function and logs the creation process. If the deployment already exists, it ensures the deployment image is the same as specified in the PgUpgrade object. If there is a difference, it updates the deployment with the new image.
+
+### 4.3.2 Service Creation
+
+The function checks if the PgUpgrade service already exists. If not, it creates a new service using the `serviceForPgUpgrade` function and logs the creation process. If the service already exists, it moves on to the next step.
+
+### 4.3.3 Schema Synchronisation
+
+The `syncSchema` function executes the schema synchronisation command on the target PostgreSQL instance. It does so by connecting to the target pod, discovering its IP address, and running the schema sync command through the `remotecommand` package.
+
+### 4.3.4 Subscription Creation
+
+The `createSubscriptions` function establishes the logical replication subscription between the old and new PostgreSQL instances. It connects to the new PostgreSQL instance and runs the `create subscription` command with the necessary parameters.
+
+### 4.3.5 Nginx Proxy Change
+
+The `changeNginxProxyPass` function is responsible for updating the Nginx configuration stored in a ConfigMap. It takes the context, request, PgUpgrade resource, and deployment as input arguments. The function first retrieves the ConfigMap containing the Nginx configuration and checks if it contains the `nginx.conf` key. If the key is present, the function replaces the old database host value with the new follower IP in the `proxy_pass` directive. Then it updates the ConfigMap in the cluster.
+
+### 4.3.6 Resource Deletion
+
+The `deleteResource` function is responsible for deleting the specified resources (deployments) from the cluster. It takes the context, PgUpgrade resource, and deployment as input arguments. The function first creates a new Kubernetes clientset and then iterates over the resource names specified in the `KillDeployments` field of the PgUpgrade resource. For each resource, it deletes the deployment in the specified namespace and logs the deletion operation.
+
+### 4.3.8 Helper Functions
+
+Several helper functions are implemented to support the primary functions of the system. These include:
+
+- `labelsForPgUpgrade`: Generates labels for a PgUpgrade resource.
+- `getFollowerIP`: Be responsible for retrieving the follower's IP address from the cluster. It takes the context, PgUpgrade resource, and deployment as input arguments. The function first creates a new Kubernetes clientset and then retrieves the pod name for the specified `OldDBLabel`. After obtaining the pod name, it retrieves the pod IP address and logs it.
+
+The System Implementation chapter describes the key components of the PgUpgrade controller and the methods for creating resources, syncing schemas, creating subscriptions, deleting resources, and updating the Nginx configuration. These components and functions work together to automate the PostgreSQL upgrade process and minimise downtime during the upgrade.
+
+# 5. Prototype Outcomes
+
+The prototype developed in this study aimed to address the challenges of database version migration and traffic switching, ensuring minimal disruption to users. The outcomes of the prototype are discussed below.
+
+## 5.1 Continuous Read/Write Access
+
+During the initial phase, users were able to send read/write requests to the database cluster via the exposed port on nginx. This allowed continuous access to the database even when the migration to the new version began. It ensured that users experienced no downtime or disruption in service during the migration process.
+
+## 5.2 Database Version Migration and Synchronisation
+
+In the cluster, a new version of the database was created and synchronised with the old version using logical replication. This approach facilitated a smooth transfer of data between the two versions while maintaining data consistency. By monitoring the information in pg_stat_replication, the prototype was able to automatically switch traffic from the old version to the new version at the appropriate time.
+
+## 5.3 Transparent Traffic Switching
+
+Upon completion of the migration process, the user's read/write requests were successfully switched to the new version of the database. The entire operation of database version migration and traffic switching within the cluster was transparent to users, allowing them to continue using the service without any awareness of the underlying changes.
+
+The prototype outcomes demonstrate that the proposed solution is effective in addressing the challenges of database version migration and traffic switching. The seamless experience provided to users during the migration process underscores the practicality and robustness of the approach. Further research and development can focus on refining the prototype for broader applications and testing in various database environments.
+
+# 6. Conclusions
+
+This thesis aimed to design a system addressing the challenges associated with database version changes, with specific goals focused on minimising downtime, automating processes, and maintaining transparency to clients. The primary objectives in the system design were to:
+
+1. Perform Database Version Change
+2. Minimise Downtime
+3. Automate the Procedure
+4. Remain Transparent to Clients
+
+The prototype presented in this thesis successfully demonstrated that the proposed solution could effectively meet the established goals. By providing continuous read/write access, seamless version migration and synchronisation, and transparent traffic switching, the system ensured uninterrupted service provision and minimal disruption to users.
+
+## 6.1 Achievement
+
+The achievements of this project in relation to the stated goals are as follows:
+
+1. **Perform Database Version Change**: The prototype effectively managed the transition between different database versions by leveraging logical replication, ensuring data consistency and seamless migration.
+2. **Minimise Downtime**: The system achieved minimal downtime by allowing users to send read/write requests during the migration process, ensuring uninterrupted access to the database.
+3. **Automate the Procedure**: The prototype automated traffic switching through monitoring pg_stat_replication data, reducing the need for manual intervention and increasing overall efficiency and reliability.
+4. **Transparent to Clients**: The entire process of database version changes remained transparent to clients, allowing them to continue using the services without any discernible difference in performance during the transition.
+
+##  6.2 Future Work
+
+While the prototype successfully demonstrated the effectiveness of the proposed solution, future work can be directed towards refining and extending the system for broader applications. Potential areas for future research and development include:
+
+1. Testing the system in various database environments to assess its adaptability and compatibility with different database management systems.
+2. Evaluating the scalability of the system in handling larger and more complex migrations, including those involving multiple database clusters and various data types.
+3. Investigating potential improvements in the automation processes and monitoring tools to further optimise the efficiency and reliability of the system.
+
+In conclusion, this thesis presents a successful prototype that addresses the challenges associated with database version changes. The developed system effectively minimises downtime, automates critical processes, and remains transparent to clients, demonstrating the practicality and robustness of the proposed solution. With further research and development, the system can be refined for broader applications, contributing to the evolving landscape of database management and service provision.
 
 # Reference
 
